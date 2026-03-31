@@ -1,0 +1,68 @@
+\chapter{Problem Description}
+
+This chapter introduces the fundamental chemical concepts underlying the study, as well as the issue of drug disposal in wastewater, which constitutes the central focus of this thesis. Indeed, before introducing the machine learning architectures used for generative and predictive tasks, it is crucial to understand the physical problem being solved. We first discuss how chemical structures are represented for computational analysis, followed by an overview of the wastewater remediation process using polymer absorbents. Finally, we define the key physicochemical features that form our dataset and review the state of the art in predicting polymer--molecule absorption.
+
+
+\section{Representation of Molecules and Polymers --- SMILES and P--SMILES}
+\label{sec:smiles_and_psmiles}
+
+To apply machine learning algorithms to chemical problems, physical molecules and macroscopic polymer structures must first be translated into a machine--readable format. While humans traditionally rely on 2D structural diagrams to understand chemical connectivity, computational models — particularly those based on Natural Language Processing (NLP) approaches — require data to be formatted as one--dimensional sequences or numerical arrays. The Simplified Molecular--Input Line--Entry System (SMILES) has become the de facto standard for this translation \cite{weininger1988smiles}.
+
+\subsection*{SMILES: Simplified Molecular--Input Line--Entry System}
+SMILES is a line notation method that represents the structure of a chemical species using short ASCII strings. Developed in the late 1980s, it allows for a highly compact and easily searchable representation of chemical graphs. The system is governed by a set of formal grammar rules:
+\begin{itemize}
+	\item \textbf{Atoms} are represented by their standard atomic symbols (e.g., \texttt{C} for carbon, \texttt{O} for oxygen, \texttt{N} for nitrogen). Aromatic atoms are typically written in lowercase (e.g., \texttt{c}, \texttt{n}, \texttt{o});
+	\item \textbf{Bonds} are denoted by specific symbols, such as \texttt{=} for double bonds and \texttt{\#} for triple bonds. Single bonds are generally implicitly assumed between adjacent atoms to save space;
+	\item \textbf{Branches} in the molecular graph are enclosed in parentheses \texttt{()};
+	\item \textbf{Rings} are represented by breaking one bond in the ring and assigning a matching numerical digit to the two atoms where the ring was broken (e.g., Benzene is represented as \texttt{c1ccccc1}).
+\end{itemize}
+
+\subsection*{P--SMILES vs. BigSMILES: Adapting Line Notation for Polymers}
+While standard SMILES is highly effective for discrete, small molecules (such as the pharmaceutical pollutants targeted in this study), representing polymers presents a fundamentally different challenge. Unlike small molecules, which have a fixed atomic composition and exact molecular weight, polymers are macromolecules composed of repeating structural units (monomers) and exhibit a stochastic distribution of chain lengths.
+
+To represent polymers within a chemoinformatics framework, extensions of the SMILES syntax have been developed, most notably Polymer SMILES (P--SMILES) and BigSMILES \cite{lin2019bigsmiles}. P--SMILES captures the simple topological repeating unit using explicit attachment points — usually represented by asterisk symbols (\texttt{*}), dummy atoms (like \texttt{[At]}), or specific bracket enclosures. For example, the repeating unit of polyethylene, which consists of a simple \ce{-CH2-CH2-} backbone, can be concisely represented in P--SMILES as \texttt{*CC*}.
+
+In contrast, BigSMILES provides a much more comprehensive, object--oriented grammar capable of describing stochastic polymers, diverse end--groups, and complex macromolecular ensembles. Theoretically, BigSMILES contains richer structural information and would be better suited for the advanced Machine Learning approaches utilized in this work. However, its adoption is currently hindered by severe data scarcity. Furthermore, many software tools designed to parse BigSMILES are either deprecated or no longer actively maintained. Consequently, in this thesis, we opted to use the simpler but much more robustly supported P--SMILES representation for polymer encoding.
+
+\subsection*{Limitations of Line Notations}
+Despite their widespread utility, SMILES and P--SMILES representations possess inherent limitations. Primarily, they reduce three--dimensional molecular topologies into one--dimensional strings, implicitly discarding complex spatial information such as precise atomic coordinates, conformational folding, and stereochemical nuances. Furthermore, because a SMILES string traces a path through a molecular graph, a single molecule can often be represented by multiple valid strings depending on the starting atom of the traversal. This necessitates the use of strict canonicalization algorithms to ensure consistency across datasets. For polymers specifically, the simplified P--SMILES representation struggles to capture macroscopic properties that drastically affect absorption, such as cross--linking density, branching frequency, or specific block copolymer arrangements.
+
+
+\subsection*{Line Notations for Generative and Predictive Modeling}
+The use of SMILES and P--SMILES is critical for the computational pipeline developed in this thesis. Nonetheless, because both representations reduce chemical topologies to 1D strings of text, they directly enable the use of Transformer--based architectures, such as minGPT. By treating the SMILES/P--SMILES grammar as a synthetic language, the minGPT model can learn the underlying sequence probabilities, which allows it to autoregressively generate new SMILES and P--SMILES strings. It is crucial to note, however, that the generative model simply outputs character sequences based on learned distributions; it does not inherently guarantee chemical validity. In practice, a significant portion of the raw generated strings are syntactically or chemically invalid. Therefore, the generated sequences must be subsequently parsed and validated using RDKit, making this post--generation filtering step essential.
+Furthermore, valid representations serve as the foundational input for feature extraction. Using tools like Polymetrix and tblite, the P--SMILES of the polymer and the SMILES of the target pollutant can be parsed to compute geometric, thermodynamic, and electronic descriptors. These descriptors subsequently form the feature vectors used by the Multi--Layer Perceptron (MLP) to predict the absorption capacity of the polymer--molecule pair in wastewater applications.
+
+
+\section{Polymer--Molecule Interactions in Wastewater Treatment}
+\label{sec:interactions}
+
+The presence of pharmaceutical compounds in aquatic ecosystems poses a severe and increasing environmental threat. These molecules, which enter waterways through agricultural runoff, industrial discharge, and inadequate municipal wastewater treatment, are often highly resistant to natural degradation. Consequently, they accumulate in the environment, leading to adverse effects on aquatic life and potentially entering the human food chain.
+
+To combat this problem, adsorption utilizing porous polymer networks — often referred to as polymer sponges or hydrogels — has emerged as a highly effective remediation strategy. Polymers are particularly well--suited for this task because their chemical backbones can be functionalized to attract specific classes of pollutants. 
+
+When a polymer is introduced into contaminated water, the pharmaceutical molecules interact with the polymer matrix through various intermolecular forces, including hydrogen bonding, electrostatic interactions, van der Waals forces, and $\pi-\pi$ stacking.  The efficacy of this capture process is highly dependent on the complementary structural features of both the polymer repeating unit and the target molecule. Discovering the optimal polymer for a specific pollutant involves navigating a massive combinatorial space of chemical interactions, a task traditionally limited by the slow pace of trial--and--error laboratory synthesis.
+
+\section{Selected Features and Targets}
+\label{sec:selected_features}
+
+To bridge physical chemistry and predictive machine learning, the absorption process must be quantitatively characterized.  In this thesis, the dataset used to train the MLP collects three fundamental features extracted from the scraped literature.
+
+\subsection*{pH of the Solution}
+The pH of the wastewater is a critical environmental variable that governs the ionization state of both the polymer surface and the pharmaceutical molecule. Changes in pH can protonate or deprotonate functional groups, drastically altering the electrostatic interactions between the absorbent and the pollutant. Capturing the pH is therefore essential for the model to understand the environmental context of the absorption.
+
+\subsection*{Initial Concentration ($mg/L$)}
+The initial concentration represents the starting amount of the pharmaceutical pollutant in the water before the polymer is added, measured in milligrams per liter ($mg/L$). This feature serves as the thermodynamic driving force for the absorption process. Higher initial concentrations typically increase the probability of pollutant molecules colliding with and adhering to the available binding sites on the polymer matrix.
+
+\subsection*{Absorption Capacity ($mg/g$)}
+The Absorption Capacity is the primary target variable for our predictive modeling. It measures the mass of the pollutant absorbed per unit mass of the polymer material, expressed in milligrams per gram ($mg/g$).  This feature definitively answers the question of efficiency: how much of the pollutant can a specific amount of the polymer actually remove? Accurately predicting this capacity for novel, unseen polymer--molecule pairs is the central predictive goal of this work.
+
+\section{Related Work }
+\label{sec:related_work}
+
+Historically, the discovery of novel absorbents for wastewater treatment has been empirically driven. Researchers synthesize a candidate polymer, expose it to a specific pollutant under controlled laboratory conditions, and measure the resulting absorption capacity. While this approach provides high--fidelity data, it is inherently unscalable given the vastness of the chemical space.
+
+More recently, computational chemistry approaches such as Molecular Dynamics (MD) simulations \cite{MDPolymerMoleculeInteraction} and Density Functional Theory (DFT) \cite{DFTPolymerStructure} have been employed to model polymer--molecule interactions at the atomic level. While these methods provide deep mechanistic insights, they are computationally expensive and too slow to screen thousands of candidates rapidly.
+
+The application of Machine Learning to predict absorption capacity represents the current frontier in this field. However, the primary bottleneck in training robust ML models for this specific domain remains data scarcity. Most published literature reports only a handful of experimental data points for highly specific conditions, lacking the standardization required for a large--scale data analysis. 
+
+Recent works have highlighted the need for unified databases and automated literature scraping to aggregate these fragmented experimental results. By systematically extracting data from the scientific literature, deriving features using computational chemistry libraries such as RDKit and Polymetrix\cite{polymetrix},  and augmenting sparse datasets through interpolation techniques, this thesis builds upon the emerging paradigm of data--driven materials discovery to address these traditional limitations.

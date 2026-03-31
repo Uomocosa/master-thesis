@@ -1,0 +1,75 @@
+% --------------------------------------------------------
+% Department of Information Engineering and Mathematics
+% University of Siena, Italy
+% Overleaf/LaTeX Template Created by Prof. Tommaso Addabbo
+% --------------------------------------------------------
+
+% use twoside option in case of double-sided print
+\documentclass[12pt,a4paper,oneside]{report} 
+\usepackage[utf8]{inputenc}
+
+% customize your packages in the following file
+\input{setup_stuff.tex}
+
+
+% ========================================================
+% ========================================================
+\begin{document}
+% ========================================================
+% ========================================================
+
+\pagestyle{empty_page}
+
+
+% --------------------------------------------------------
+% cover page
+\input{title_page.tex}
+\cleardoublepage 
+\setcounter{page}{1}
+
+% --------------------------------------------------------
+% table of contents
+\tableofcontents
+\cleardoublepage
+\pagestyle{default_page}
+
+% --------------------------------------------------------
+% input your chapters here
+
+% INTRODUCTION (Unnumbered and not in TOC)
+\input{CHAPTERS/introduction.tex}
+\cleardoublepage
+
+\input{CHAPTERS/biological_background.tex}
+\cleardoublepage
+
+\input{CHAPTERS/machine_learning_architectures.tex}
+\cleardoublepage % opens next new chapters in right pages for two-sided printing
+
+\input{CHAPTERS/data_acquisition.tex}
+\cleardoublepage 
+
+\input{CHAPTERS/generative_modeling.tex}
+\cleardoublepage 
+
+\input{CHAPTERS/predictive_modeling.tex}
+\cleardoublepage 
+
+\input{CHAPTERS/conclusions.tex}
+\cleardoublepage 
+
+% --------------------------------------------------------
+% input final stuff here (appendices, bibliography)
+\pagestyle{final_stuff}
+
+% \input{CHAPTERS/appendix_A.tex}
+% \cleardoublepage % opens next new chapters in right pages for two-sided printing
+
+\input{CHAPTERS/references.tex}
+\cleardoublepage % opens next new chapters in right pages for two-sided printing
+
+\input{CHAPTERS/acknow.tex}
+\cleardoublepage % opens next new chapters in right pages for two-sided printing
+
+
+\end{document}

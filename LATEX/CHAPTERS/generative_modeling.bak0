@@ -1,0 +1,62 @@
+\chapter{Generative Modeling for Molecular Discovery}
+\label{sec:generative_chapter}
+
+Beyond predictive modeling, this thesis explores the complementary task of generating novel polymer structures that could serve as effective wastewater absorbents. Rather than relying solely on known polymers, a generative approach enables the systematic exploration of a theoretically infinite chemical space. This chapter describes the implementation and evaluation of a generative model for producing valid P-SMILES strings.
+
+\section{The minGPT Wrapper Implementation}
+\label{sec:mingpt_wrapper}
+
+The Generative Pre-trained Transformer (GPT) architecture, originally developed for natural language processing, has demonstrated remarkable capabilities in learning complex sequential patterns. By treating chemical notation as a specialized language, the same principles can be applied to generate novel molecular structures. In this work, the minGPT framework—a lightweight, modular implementation of the GPT architecture created by Andrej Karpathy—was adapted to serve as the backbone for polymer generation.
+
+The core conceptual shift in applying language models to molecular generation is the reframing of chemical validity as grammatical correctness. Just as a sentence in English must follow syntactic rules to be grammatically valid, a SMILES or P-SMILES string must conform to strict chemical grammar rules. The autoregressive nature of the GPT architecture makes it particularly well-suited for this task: the model learns the conditional probability distribution of the next token given all previous tokens in the sequence, effectively learning the grammar of molecular notation.
+
+A critical component of the implementation is the custom tokenizer developed for P-SMILES notation. Unlike natural language tokenizers that operate on subword units, the chemical tokenizer must handle atomic symbols, bond types, branching parentheses, and ring closure digits as atomic units. The tokenizer builds a vocabulary from the training dataset, assigning a unique integer identifier to each distinct token observed in the training data. Special tokens are introduced to mark the beginning and end of each sequence.
+
+The training procedure follows the standard language modeling objective: given a sequence of tokens representing a valid P-SMILES string, the model learns to predict the next token in the sequence. During training, the model is exposed to thousands of valid polymer structures, gradually learning the statistical regularities that characterize chemically plausible polymers. The loss is computed as the cross-entropy between the predicted token distribution and the actual next token, and gradients are computed via backpropagation through the transformer layers.
+
+The hyperparameters of the model include the number of transformer layers (determining the model's capacity to learn complex dependencies), the number of attention heads per layer, the embedding dimension, and the context length (the maximum sequence length the model can handle). These were tuned through preliminary experiments to balance model expressiveness with computational efficiency.
+
+Training was performed on two datasets. The primary training set for polymer generation was the PI1M dataset, a comprehensive collection of synthetic polymer structures represented in P-SMILES notation. For comparison, a secondary model was trained on the ZINC_base dataset to evaluate the generation of standard molecular SMILES strings.
+
+\section{Generating Valid Synthetic Polymer SMILES (P-SMILES)}
+\label{sec:generating_psmiles}
+
+Once trained, the model can generate new polymer structures through autoregressive sampling. Starting from a special start-of-sequence token, the model predicts the probability distribution over the next token in the vocabulary. A token is then sampled from this distribution and appended to the sequence. This process repeats iteratively until a special end-of-sequence token is generated or the maximum sequence length is reached.
+
+The sampling procedure supports several generation strategies. Temperature scaling controls the randomness of the sampling process. At low temperatures (e.g., 0.8), the model tends to produce highly probable tokens, yielding conservative generations that closely resemble the training data. At higher temperatures (e.g., 1.2), the model is more likely to explore lower-probability tokens, producing more diverse and potentially novel structures. Top-k sampling, which restricts the candidate tokens to the k most probable options at each step, can be combined with temperature scaling to further control the trade-off between quality and diversity.
+
+Following generation, each output string must be validated and canonicalized. This post-processing step is essential because the generative model produces strings based on learned statistical patterns and does not inherently guarantee chemical validity. Invalid strings may result from sampling errors or may represent syntactically correct but chemically impossible structures. Validation is performed using RDKit, which parses the generated string and checks whether it corresponds to a chemically valid molecular graph. For polymers, additional validation specific to P-SMILES grammar is applied to ensure proper attachment point notation.
+
+Novelty checking is performed by comparing generated structures against the training set. A generated polymer is considered novel if its canonicalized representation does not appear in the training data. This step ensures that the generative model is not merely reproducing memorized structures but is genuinely creating new candidates.
+
+\section{Evaluation of Generated P-SMILES}
+\label{sec:evaluation_generation}
+
+The quality of the generated polymers was assessed through multiple metrics addressing validity, novelty, and structural diversity.
+
+Validity rates provide a measure of how often the model produces syntactically correct output. When generating standard molecular SMILES from the ZINC_base-trained model, approximately 43.2\% of the 12,800 generated strings were successfully parsed and validated by RDKit. For P-SMILES generation using the PI1M-trained model, the validity rate was notably higher at approximately 57.6\%. The difference reflects the relative complexity of standard molecular grammar compared to the P-SMILES notation used for polymers.
+
+Novelty analysis further confirmed that a substantial fraction of valid generations represent structures not present in the training data. Among the valid SMILES generated, all 5,525 were confirmed to be novel with respect to the training set. Similarly, all 7,373 valid P-SMILES were novel compared to the PI1M training data. These results demonstrate that the model has learned to generalize beyond simple memorization and can generate genuinely new chemical structures.
+
+The generation results are summarized in Table \ref{tab:generation_results}. These metrics indicate that the generative model successfully produces a mixture of valid and novel structures, providing a diverse pool of candidate polymers for subsequent filtering and evaluation.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of Generative Model Evaluation Results}
+\label{tab:generation_results}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Output Type} & \textbf{Generated} & \textbf{Valid} & \textbf{Novel} \\
+\midrule
+SMILES (ZINC\_base) & 12,800 & 5,525 (43.2\%) & 5,525 (100\%) \\
+P-SMILES (PI1M) & 12,800 & 7,373 (57.6\%) & 7,373 (100\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The high novelty rate is particularly significant for the drug discovery pipeline envisioned in this thesis. A generative model that merely reproduces known structures would offer limited value for discovering novel absorbents. The ability to generate truly novel polymers, combined with the filtering and prediction stages described in subsequent chapters, enables a closed-loop workflow for computational polymer discovery.
+
+\section{Integration with the Discovery Pipeline}
+\label{sec:pipeline_integration}
+
+The generative model serves as the foundation of the broader computational pipeline developed in this thesis. Generated polymers enter a multi-stage filtering and evaluation process. First, validity checking ensures that only chemically valid structures proceed. Second, heuristic filters based on chemical properties (discussed in Chapter 6) eliminate structures that are unlikely to be effective absorbents. Third, for the most promising candidates, the predictive model estimates the expected absorption capacity against the target pharmaceutical. This integrated approach represents a shift from traditional trial-and-error laboratory synthesis toward a data-driven, computationally accelerated discovery workflow.

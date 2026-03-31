@@ -1,0 +1,33 @@
+\contentsline {chapter}{Introduction}{3}{chapter*.3}%
+\contentsline {chapter}{\numberline {1}Problem Description}{6}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Representation of Molecules and Polymers --- SMILES and P--SMILES}{6}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Polymer--Molecule Interactions in Wastewater Treatment}{10}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Selected Features and Targets}{10}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Related Work }{12}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Machine Learning Architectures}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Artificial Neural Networks and Multi--Layer Perceptrons}{13}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Generative Pre--trained Transformers (GPT) and minGPT}{14}{section.2.2}%
+\contentsline {section}{\numberline {2.3}K--Fold Cross--Validation}{16}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Data Acquisition and Feature Engineering}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Literature Scraping for Polymer-Molecule Data}{17}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Overcoming Data Scarcity: Interpolation and Augmentation}{19}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Feature Extraction using RDKit, Polymetrix, and tblite}{20}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Generative Modeling for Molecular Discovery}{23}{chapter.4}%
+\contentsline {section}{\numberline {4.1}The minGPT Wrapper Implementation}{23}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Generating Valid Synthetic Polymer SMILES (P-SMILES)}{25}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Evaluation of Generated P-SMILES}{26}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Integration with the Discovery Pipeline}{27}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Predictive Modeling of Absorption Capacity}{28}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Experimental Setup for the MLP}{28}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Addressing the Small Dataset Challenge}{30}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Cross-Validation Results and Performance Metrics}{31}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Discussion of Model Limitations and Predictive Feasibility}{32}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Polymer Filtering Based on Chemical Properties}{33}{section.5.5}%
+\contentsline {section}{\numberline {5.6}The Integrated Discovery Pipeline}{35}{section.5.6}%
+\contentsline {chapter}{\numberline {6}Conclusions and Future Work}{37}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary of Contributions}{37}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Limitations and Challenges}{38}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Future Research Directions}{40}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Closing Remarks}{41}{section.6.4}%
+\contentsline {chapter}{References}{42}{chapter*.12}%
+\contentsline {chapter}{Acknowledgements}{43}{chapter*.13}%
