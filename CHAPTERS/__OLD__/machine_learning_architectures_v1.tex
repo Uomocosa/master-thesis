@@ -1,11 +1,11 @@
 \chapter{Machine Learning Architectures}
 
-This chapter introduces the theoretical foundations of the machine learning algorithms employed in this thesis. Two fundamentally different architectures were utilized to tackle the dual objectives of this research: Generative Pre--trained Transformers (specifically minGPT) were used for the generative task of discovering novel polymer structures, while Multi--Layer Perceptrons (MLP) were deployed for the regression task of predicting the absorption capacity. Additionally, we discuss K--Fold Cross--Validation, a critical statistical method used to ensure the robustness of our predictive models given the constraints of a limited dataset.
+This chapter introduces the theoretical foundations of the machine learning algorithms employed in this thesis. Two fundamentally different architectures were utilized to tackle the dual objectives of this research: Generative Pre--trained Transformers (specifically minGPT) were used for the generative task of discovering novel polymer structures, while Multi--Layer Perceptrons (MLP) were deployed for the regression task of predicting the adsorption capacity. Additionally, we discuss K--Fold Cross--Validation, a critical statistical method used to ensure the robustness of our predictive models given the constraints of a limited dataset.
 
 \section{Artificial Neural Networks and Multi--Layer Perceptrons}
 \label{sec:mlp}
 
-Artificial Neural Networks (ANNs) are a class of machine learning models inspired by the biological neural networks that constitute animal brains. The most fundamental and widely used feedforward ANN is the Multi--Layer Perceptron (MLP). 
+Artificial Neural Networks (ANNs) are a class of machine learning models inspired by the biological neural networks that constitute animal brains. The most fundamental and widely used feedforward ANN is the Multi--Layer Perceptron (MLP).
 
 An MLP consists of at least three layers of interconnected nodes, or "neurons": an input layer, one or more hidden layers, and an output layer.  Except for the input nodes, each node is a neuron that uses a nonlinear activation function. The data flows in a single direction — from the input to the output — hence the designation "feedforward."
 
@@ -13,11 +13,11 @@ Mathematically, the calculation carried out at a given hidden layer $l$ can be d
 \begin{equation}
 	\mathbf{h}^{(l)} = \sigma \left( \mathbf{W}^{(l)} \mathbf{h}^{(l-1)} + \mathbf{b}^{(l)} \right)
 \end{equation}
-where $\mathbf{h}^{(l-1)}$ is the input from the previous layer, $\mathbf{W}^{(l)}$ is the weight matrix, $\mathbf{b}^{(l)}$ is the bias vector, and $\sigma$ represents a non--linear activation function, such as the Rectified Linear Unit (ReLU) or the Sigmoid function. 
+where $\mathbf{h}^{(l-1)}$ is the input from the previous layer, $\mathbf{W}^{(l)}$ is the weight matrix, $\mathbf{b}^{(l)}$ is the bias vector, and $\sigma$ represents a non--linear activation function, such as the Rectified Linear Unit (ReLU) or the Sigmoid function.
 
 During the training phase, the network learns to map inputs to outputs by adjusting its weights and biases to minimize a predefined loss function (e.g., Mean Squared Error for regression tasks). This optimization is typically achieved using the Backpropagation algorithm combined with gradient descent methods like Adam \cite{kingma2014adam}.
 
-In the context of this thesis, the MLP is tasked with predicting a continuous variable: the absorption capacity ($mg/g$) of a polymer--molecule pair. The input layer receives a high dimensional feature vector containing topological, thermodynamic, and electronic descriptors extracted from the SMILES and P--SMILES strings. Through its hidden layers, the MLP learns the complex, non--linear mappings between these chemical features and the target efficiency metric.
+In the context of this thesis, the MLP is tasked with predicting a continuous variable: the adsorption capacity ($mg/g$) of a polymer--molecule pair. The input layer receives a high dimensional feature vector containing topological, thermodynamic, and electronic descriptors extracted from the SMILES and P--SMILES strings. Through its hidden layers, the MLP learns the complex, non--linear mappings between these chemical features and the target efficiency metric.
 
 \section{Generative Pre--trained Transformers (GPT) and minGPT}
 \label{sec:mingpt}
@@ -39,7 +39,7 @@ In this work, we utilize \textbf{minGPT}, a minimal, highly readable, and custom
 
 A pervasive challenge in applying machine learning to specific physicochemical domains — such as polymer--based wastewater remediation — is data scarcity. Training complex models like MLPs on limited data frequently leads to overfitting, where the model memorizes the training examples but fails to generalize to unseen chemical combinations.
 
-To rigorously evaluate model performance and tune hyperparameters under these constraints, we employed K--Fold Cross--Validation.  In this resampling procedure, the entire dataset is randomly partitioned into $K$ equal--sized, mutually exclusive subsets or "folds." 
+To rigorously evaluate model performance and tune hyperparameters under these constraints, we employed K--Fold Cross--Validation.  In this resampling procedure, the entire dataset is randomly partitioned into $K$ equal--sized, mutually exclusive subsets or "folds."
 
 The cross--validation process then proceeds in $K$ iterations. In each iteration $i$:
 \begin{enumerate}

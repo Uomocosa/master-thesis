@@ -65,7 +65,7 @@ So we have a model that can generate novel, and valid p-smiles, this is one part
 
 ----
 
-# Predictive Modeling of Absorption Capacity
+# Predictive Modeling of adsorption Capacity
 
 To test the ability of a simple model to predict the CAPACITY, given the polymer features, molecule features, as well as the WATER_PH and CONCENTRATION, I tried to use a small MLP (Multi-Layer Perceptron).
 
@@ -121,7 +121,7 @@ As the final result I put it all toghter creating the `find_polymer_for_target_m
 
 1. It requires as an input a target molecule (like "aspirin", "ibuprofen", ...). And convert it into SMILES notation.
 2. It uses the PeeSmileGenerator (based on the mingpt model) to create a vast array of polymers.
-3. It uses the PeeSmileFilter to disacard the one that we consider incapable of absorption.
+3. It uses the PeeSmileFilter to disacard the one that we consider incapable of adsorption.
 4. It uses the PeeSmileCapacityPredictor (MLP model) to predict the capacity of the polymer with the molecule.
 5. If the predicted capacity is higher that a certain target capacity (default: `1.0`) it outputs the polymer found, and create two graphs: one that show how the prediction changes by changing the initial concentration, and onother that shows how the prediction changes with different whater Ph. If the target capacity is not reached, the loop will start over and the PeeSmileGenerator will create a new batch of polymers to test.
 
@@ -136,7 +136,7 @@ The function uses sensible defaults to be used more easily.
 
 # Conclusion and Future Work
 
-The first thing that need to be addressed in any future work, using this "framework"/"pipeline" is the scarsity of experiment results, to see the absorption of the polymer for specific molecules, for many different polymers, molecules, and in different waters. Not only good results, but also failures, so many data of polymers that do not absorb specific molecules.
+The first thing that need to be addressed in any future work, using this "framework"/"pipeline" is the scarsity of experiment results, to see the adsorption of the polymer for specific molecules, for many different polymers, molecules, and in different waters. Not only good results, but also failures, so many data of polymers that do not absorb specific molecules.
 
 This pipeline assumes that the polymers are all represented in a p-smiles string notation. If data emerges, it could be interesting see the results using diffrent notations, suchs as BigSmiles.
 

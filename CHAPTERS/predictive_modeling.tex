@@ -1,18 +1,18 @@
-\chapter{Predictive Modeling of Absorption Capacity}
+\chapter{Predictive Modeling of adsorption Capacity}
 \label{sec:predictive_chapter}
 
-Having established the ability to generate novel polymer structures, this chapter addresses the complementary challenge of predicting their effectiveness. The central predictive task is to estimate the absorption capacity of a given polymer-molecule pair under specified environmental conditions. This chapter describes the experimental methodology, hyperparameter optimization, and results obtained using the Multi-Layer Perceptron architecture introduced in Chapter 2.
+Having established the ability to generate novel polymer structures, this chapter addresses the complementary challenge of predicting their effectiveness. The central predictive task is to estimate the adsorption capacity of a given polymer-molecule pair under specified environmental conditions. This chapter describes the experimental methodology, hyperparameter optimization, and results obtained using the Multi-Layer Perceptron architecture introduced in Chapter 2.
 
 \section{Experimental Setup for the MLP}
 \label{sec:mlp_setup}
 
-The Multi-Layer Perceptron employed for capacity prediction is a feedforward neural network with a carefully chosen architecture designed to capture the nonlinear relationships between chemical features and absorption efficiency. The network consists of an input layer sized to match the dimensionality of the feature vector, multiple hidden layers with progressively decreasing widths (specifically: 16, 8, 4, 4, and 4 neurons in each respective hidden layer), and a single output neuron that produces the predicted capacity value.
+The Multi-Layer Perceptron employed for capacity prediction is a feedforward neural network with a carefully chosen architecture designed to capture the nonlinear relationships between chemical features and adsorption efficiency. The network consists of an input layer sized to match the dimensionality of the feature vector, multiple hidden layers with progressively decreasing widths (specifically: 16, 8, 4, 4, and 4 neurons in each respective hidden layer), and a single output neuron that produces the predicted capacity value.
 
 The feature vector input to the MLP encompasses all relevant information about the polymer, the target pharmaceutical molecule, and the experimental conditions. This includes the thermodynamic and electronic descriptors extracted as described in Chapter 4: logP and logD values for both polymer and molecule, HOMO-LUMO energies in electron volts, net charges at the relevant pH, and topological descriptors such as TPSA and molecular weight. The Morgan fingerprint representation provides additional structural information, while the initial concentration and water pH encode the experimental context.
 
 Preprocessing of the input features is critical for stable and effective training. The feature vector is scaled using a StandardScaler, which transforms each feature to have zero mean and unit variance. This ensures that features measured in different units (such as energies in eV versus dimensionless logP values) contribute proportionally to the learning process. A separate MinMaxScaler is applied to the target capacity values, mapping them to the range [0, 1] to facilitate gradient-based optimization.
 
-The output activation function requires special consideration. Because absorption capacity is inherently non-negative, a SoftPlus activation function is applied to the network output. SoftPlus is a smooth, differentiable approximation of the ReLU function, defined as $\text{SoftPlus}(x) = \log(1 + e^x)$. Unlike a linear output, which could theoretically produce negative predictions, SoftPlus guarantees non-negative outputs that are consistent with the physical nature of the target variable.
+The output activation function requires special consideration. Because adsorption capacity is inherently non-negative, a SoftPlus activation function is applied to the network output. SoftPlus is a smooth, differentiable approximation of the ReLU function, defined as $\text{SoftPlus}(x) = \log(1 + e^x)$. Unlike a linear output, which could theoretically produce negative predictions, SoftPlus guarantees non-negative outputs that are consistent with the physical nature of the target variable.
 
 Training is performed using the Adam optimizer with mean squared error (MSE) as the loss function. The MSE loss is appropriate for regression tasks where larger errors should be penalized proportionally more than smaller errors. The model is trained for a fixed number of epochs with early stopping based on validation loss when a validation set is available.
 
@@ -34,7 +34,7 @@ The dataset augmentation strategies described in Chapter 4 (interpolation and or
 
 The hyperparameter optimization process evaluated a wide range of configurations using both standard K-fold and Leave-One-Out cross-validation. The results provide insight into the model's predictive capability under realistic data constraints.
 
-Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of 0.984 using LOOCV evaluation. This result is noteworthy given the data scarcity and the inherent complexity of polymer-molecule interactions. A Q² of 0.984 indicates that the model explains approximately 98.4\% of the variance in the absorption capacity, capturing a substantial portion of the underlying relationship.
+Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of 0.984 using LOOCV evaluation. This result is noteworthy given the data scarcity and the inherent complexity of polymer-molecule interactions. A Q² of 0.984 indicates that the model explains approximately 98.4\% of the variance in the adsorption capacity, capturing a substantial portion of the underlying relationship.
 
 The distribution of Q² scores across different hyperparameter configurations revealed several important findings. Configurations that included the SoftPlus output activation consistently outperformed those using a linear output, confirming the importance of constraining predictions to the physically meaningful non-negative range. The choice of feature subset had a moderate impact on performance, with configurations using the full feature set (including both Polymetrix descriptors and Morgan fingerprints) performing better than those using reduced feature sets.
 
@@ -88,11 +88,11 @@ To gain insight into the structure of the PDCC dataset and identify natural grou
 
 Despite the encouraging results, several limitations must be acknowledged. The most fundamental limitation is data scarcity. The PDCC dataset contains orders of magnitude fewer observations than typical machine learning benchmarks. Training deep neural networks on such limited data risks overfitting, where the model memorizes specific training examples rather than learning generalizable patterns. While cross-validation provides a measure of generalization performance, the confidence intervals on these estimates are wide due to the small sample size.
 
-The second limitation concerns the representativeness of the training data. The scraped literature reports successful absorption experiments, potentially introducing publication bias. Polymer-molecule pairs that did not exhibit significant absorption may be underrepresented or absent from the dataset. A robust predictive model requires data on both successes and failures to learn the boundary between effective and ineffective absorbents.
+The second limitation concerns the representativeness of the training data. The scraped literature reports successful adsorption experiments, potentially introducing publication bias. Polymer-molecule pairs that did not exhibit significant adsorption may be underrepresented or absent from the dataset. A robust predictive model requires data on both successes and failures to learn the boundary between effective and ineffective absorbents.
 
-The third limitation relates to feature quality. As discussed in Chapter 4, polymer features are computed from capped monomers rather than full polymer chains. This approximation neglects higher-order polymer properties such as chain length distribution, cross-linking density, and three-dimensional conformation, all of which influence absorption behavior. Future work incorporating more accurate polymer representations could improve predictive accuracy.
+The third limitation relates to feature quality. As discussed in Chapter 4, polymer features are computed from capped monomers rather than full polymer chains. This approximation neglects higher-order polymer properties such as chain length distribution, cross-linking density, and three-dimensional conformation, all of which influence adsorption behavior. Future work incorporating more accurate polymer representations could improve predictive accuracy.
 
-Despite these limitations, the predictive modeling framework demonstrates feasibility for the intended application. The model can provide reasonable estimates of absorption capacity for novel polymer-molecule pairs, enabling computational prioritization of candidates before laboratory synthesis and testing. The framework is extensible: as more experimental data become available, the model can be retrained to improve its accuracy and coverage.
+Despite these limitations, the predictive modeling framework demonstrates feasibility for the intended application. The model can provide reasonable estimates of adsorption capacity for novel polymer-molecule pairs, enabling computational prioritization of candidates before laboratory synthesis and testing. The framework is extensible: as more experimental data become available, the model can be retrained to improve its accuracy and coverage.
 
 \section{Polymer Filtering Based on Chemical Properties}
 \label{sec:polymer_filtering}
@@ -124,7 +124,7 @@ These filters are applied sequentially after generation and validation, dramatic
 
 The complete computational pipeline integrates generation, validation, filtering, and prediction into an end-to-end workflow for polymer discovery. Given a target pharmaceutical molecule (e.g., aspirin, ibuprofen, or metformin), the pipeline proceeds as follows.
 
-First, the target molecule is converted to SMILES notation using the PubChem database. Second, the generative model produces a batch of candidate polymer P-SMILES strings. Third, invalid and duplicate structures are eliminated through validation. Fourth, the heuristic filters based on logP, TPSA, FMO gaps, and SA score are applied. Fifth, the MLP predicts the absorption capacity for each surviving candidate. Finally, candidates are ranked by predicted capacity, and those exceeding a specified threshold are returned as promising discoveries.
+First, the target molecule is converted to SMILES notation using the PubChem database. Second, the generative model produces a batch of candidate polymer P-SMILES strings. Third, invalid and duplicate structures are eliminated through validation. Fourth, the heuristic filters based on logP, TPSA, FMO gaps, and SA score are applied. Fifth, the MLP predicts the adsorption capacity for each surviving candidate. Finally, candidates are ranked by predicted capacity, and those exceeding a specified threshold are returned as promising discoveries.
 
 This pipeline was tested with multiple target molecules, demonstrating its ability to identify candidate polymers with predicted capacities in excess of 1.0 mg/g. Visualization of capacity versus concentration and pH provides additional insight into how the predicted performance varies with experimental conditions, guiding the design of laboratory validation experiments.
 
@@ -133,13 +133,13 @@ This pipeline was tested with multiple target molecules, demonstrating its abili
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{RESULTS/predicted_capacities/plot_conc_aspirin.png}
-		\caption{Predicted absorption capacity vs. initial concentration for the top-ranked polymer against aspirin.}
+		\caption{Predicted adsorption capacity vs. initial concentration for the top-ranked polymer against aspirin.}
 		\label{fig:pipeline_conc_aspirin}
 	\end{minipage}\hfill
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{RESULTS/predicted_capacities/plot_ph_aspirin.png}
-		\caption{Predicted absorption capacity vs. water pH for the top-ranked polymer against aspirin.}
+		\caption{Predicted adsorption capacity vs. water pH for the top-ranked polymer against aspirin.}
 		\label{fig:pipeline_ph_aspirin}
 	\end{minipage}
 \end{figure}
