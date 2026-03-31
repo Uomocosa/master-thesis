@@ -102,6 +102,7 @@ The smaller of these two gaps represents the dominant interaction pathway. If th
 Check for aromatic ring althoug I did not actually need this filter, because I already built a trap for aromatic rings.
 The FMO (Frontier Molecular Orbital) gap filter is currently doing the heavy lifting. How do molecules achieve small HOMO-LUMO gaps that allow for strong donor-acceptor interactions? By having highly conjugated π-electron systems—which almost exclusively means aromatic rings.
 The FMO filter already implicitly screens for aromaticity. It's the reason the surviving polymer from your last test had two massive benzene rings (a styrene group and an azobenzene group). The quantum math naturally selected them.
+
 ----
 
 # Untrained Model: Agglomerative Hierarchical Clustering
