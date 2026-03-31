@@ -1,6 +1,6 @@
 INFO:  latexindent version 3.23.6, 2024-01-17, a script to indent .tex files
        latexindent lives here: /usr/share/texlive/texmf-dist/scripts/latexindent/
-       Tue Mar 31 18:38:48 2026
+       Tue Mar 31 18:52:06 2026
        Filename: /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.tex
 INFO:  Processing switches:
        -s|--silent: Silent mode active (you have used either -s or --silent)
@@ -16,7 +16,8 @@ INFO:  YAML reading settings
 INFO:  Backup procedure (-w flag active):
        /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
        /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
-       Backing up /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.tex to /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.bak2...
+       /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       Backing up /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.tex to /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.bak3...
        /home/uomocosa/Syncthing/[TeX] LaTeX/Master Thesis (git)/CHAPTERS/predictive_modeling.tex will be overwritten after indentation
 INFO:  Phase 1: searching for objects
 INFO:  Phase 2: finding surrounding indentation
