@@ -20,10 +20,13 @@ jobs:
         with:
           root_file: main.tex 
 
-      - name: Prepare publish directory
+      - name: Prepare files for deployment
         run: |
           mkdir public
-          cp main.pdf public/ 
+          # Move the compiled PDF into the new folder
+          cp main.pdf public/
+          # Create a simple index.html that automatically redirects to the PDF
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=main.pdf"></head><body>Redirecting to PDF...</body></html>' > public/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
