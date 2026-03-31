@@ -37,32 +37,39 @@ where $Q$, $K$, and $V$ represent the Query, Key, and Value matrices respectivel
 
 Beyond the attention mechanism, the Transformer architecture comprises several interconnected components that together enable effective sequence modeling.
 
-\textbf{Positional Encoding.} Unlike recurrent networks that process sequences step-by-step, the Transformer has no inherent notion of token order. Positional encodings inject sequence position information by adding a deterministic pattern to the token embeddings. The original Transformer uses sinusoidal functions of different frequencies:
-\begin{equation}
-	PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \quad
-	PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
-\end{equation}
-where $pos$ is the position and $i$ is the dimension index. These encodings allow the model to attend to relative positions effectively.
+\begin{itemize}
+	\item \textbf{Positional Encoding:} Unlike recurrent networks that process sequences step-by-step, the Transformer has no inherent notion of token order. Positional encodings inject sequence position information by adding a deterministic pattern to the token embeddings. The original Transformer uses sinusoidal functions of different frequencies to allow the model to attend to relative positions effectively:
+	      \begin{equation}
+		      PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \quad
+		      PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+	      \end{equation}
+	      where $pos$ is the position and $i$ is the dimension index.
 
-\textbf{Multi-Head Attention.} Rather than performing a single attention function, the Transformer employs multiple attention heads in parallel. Each head learns different aspects of the relationships between tokens:
-\begin{equation}
-	\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)W^O
-\end{equation}
-where $\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$. This allows the model to jointly attend to information from different representation subspaces at different positions.
+	\item \textbf{Multi-Head Attention:} Rather than performing a single attention function, the Transformer employs multiple attention heads in parallel. Each head learns different aspects of the relationships between tokens, allowing the model to jointly attend to information from different representation subspaces at different positions. The overall operation is defined as:
+	      \begin{equation}
+		      \text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)W^O
+	      \end{equation}
+	      where each individual head is computed as:
+	      \begin{equation}
+		      \text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)
+	      \end{equation}
+	      Here, $Q$, $K$, and $V$ are the input Query, Key, and Value matrices. The terms $W_i^Q$, $W_i^K$, and $W_i^V$ represent learned parameter matrices that linearly project the original inputs into a smaller, head-specific subspace. Finally, $W^O$ is another learned weight matrix used to project the concatenated output of all the heads back to the original model dimension.
 
-\textbf{Feed-Forward Networks.} After each attention layer, a position-wise feed-forward network is applied:
-\begin{equation}
-	\text{FFN}(x) = \sigma(xW_1 + b_1)W_2 + b_2
-\end{equation}
-where $\sigma$ is typically the GELU activation function. This component enables the model to perform non-linear transformations on each position independently.
+	\item \textbf{Feed-Forward Networks (FFN):} After each attention layer, a position-wise feed-forward network is applied to perform non-linear transformations on each position independently:
+	      \begin{equation}
+		      \text{FFN}(x) = \sigma(xW_1 + b_1)W_2 + b_2
+	      \end{equation}
+	      where $\sigma$ is typically the GELU activation function, and $W_1$, $W_2$, $b_1$, and $b_2$ are learned weights and biases.
 
-\textbf{Residual Connections and Layer Normalization.} Each sub-layer (attention and feed-forward) is wrapped with a residual connection followed by layer normalization:
-\begin{equation}
-	x \leftarrow \text{LayerNorm}(x + \text{Sublayer}(x))
-\end{equation}
-These components stabilize training and enable gradient flow through very deep networks.
+	\item \textbf{Residual Connections and Layer Normalization:} Each sub-layer (attention and feed-forward) is wrapped with a residual connection followed by layer normalization:
+	      \begin{equation}
+		      x \leftarrow \text{LayerNorm}(x + \text{Sublayer}(x))
+	      \end{equation}
+	      These components act to stabilize training and enable gradient flow through very deep networks.
 
-\textbf{Encoder versus Decoder.} The original Transformer comprised both an encoder (processing the full input sequence) and a decoder (generating the output autoregressively). GPT employs a decoder-only architecture, using \emph{causal masking} to ensure that predictions for position $i$ can only depend on positions less than $i$. This is implemented as a triangular mask applied to the attention scores before softmax, preventing future tokens from influencing current predictions.
+	\item \textbf{Encoder versus Decoder (and Causal Masking):} The original Transformer comprised both an encoder (processing the full input sequence) and a decoder (generating the output autoregressively). GPT, however, employs a decoder-only architecture. It uses \emph{causal masking} to ensure that predictions for position $i$ can only depend on positions less than $i$. This is implemented as a triangular mask applied to the attention scores before the softmax operation, preventing future tokens from influencing current predictions.
+\end{itemize}
+
 
 \subsection{minGPT Implementation}
 \label{sec:mingpt_impl}
