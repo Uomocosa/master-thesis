@@ -1,0 +1,32 @@
+name: Build and Deploy Thesis PDF
+
+on:
+  push:
+    branches: 
+      - main  # Change to 'master' if your default branch is named master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to allow the action to push to the gh-pages branch
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex 
+
+      - name: Prepare publish directory
+        run: |
+          mkdir public
+          cp main.pdf public/ 
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
