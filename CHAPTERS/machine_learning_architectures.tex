@@ -81,7 +81,7 @@ The minGPT architecture consists of the following components:
 	\item \textbf{Token Embedding Layer:} Converts integer token indices into dense vectors of dimension $d_{\text{model}}$.
 	\item \textbf{Position Embedding Layer:} Adds positional information to the token embeddings.
 	\item \textbf{Transformer Blocks:} Stacks of attention and feed-forward layers with residual connections. Each block applies LayerNorm, performs multi-head causal self-attention, applies LayerNorm again, and then processes through the feed-forward network.
-	\item \textbf{Language Modeling Head:} A linear layer that projects from the final embedding dimension back to the vocabulary size, producing logits over the next-token prediction.
+	\item \textbf{Language Modeling Head:} A linear layer that projects from the final embedding dimension back to the vocabulary size, producing logits (raw, unnormalized scores) over the next-token prediction.
 \end{itemize}
 
 The model is available in several sizes: \texttt{gpt-nano} (3 layers, 48 dimensions), \texttt{gpt-micro} (4 layers, 128 dimensions), \texttt{gpt-mini} (6 layers, 192 dimensions), and larger variants up to \texttt{gpt2-xl}. In this thesis, we employ the \texttt{gpt-nano} configuration to balance model capacity with computational efficiency for the polymer generation task.
