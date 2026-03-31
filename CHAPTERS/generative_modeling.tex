@@ -34,7 +34,7 @@ Novelty checking is performed by comparing generated structures against the trai
 
 The quality of the generated polymers was assessed through multiple metrics addressing validity, novelty, and structural diversity.
 
-Validity rates provide a measure of how often the model produces syntactically correct output. When generating standard molecular SMILES from the ZINC_base-trained model, approximately 43.2\% of the 12,800 generated strings were successfully parsed and validated by RDKit. For P-SMILES generation using the PI1M-trained model, the validity rate was notably higher at approximately 57.6\%. The difference reflects the relative complexity of standard molecular grammar compared to the P-SMILES notation used for polymers.
+Validity rates provide a measure of how often the model produces syntactically correct output. When generating standard molecular SMILES from the ZINC\_base-trained model, approximately 43.2\% of the 12,800 generated strings were successfully parsed and validated by RDKit. For P-SMILES generation using the PI1M-trained model, the validity rate was notably higher at approximately 57.6\%. The difference reflects the relative complexity of standard molecular grammar compared to the P-SMILES notation used for polymers.
 
 Novelty analysis further confirmed that a substantial fraction of valid generations represent structures not present in the training data. Among the valid SMILES generated, all 5,525 were confirmed to be novel with respect to the training set. Similarly, all 7,373 valid P-SMILES were novel compared to the PI1M training data. These results demonstrate that the model has learned to generalize beyond simple memorization and can generate genuinely new chemical structures.
 
