@@ -9,7 +9,7 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write 
+      contents: write # Required to allow the action to push to the gh-pages branch
 
     steps:
       - name: Checkout repository
@@ -18,14 +18,12 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          working_directory: LATEX  # Tells the compiler to run inside this folder
           root_file: main.tex 
 
       - name: Prepare publish directory
         run: |
           mkdir public
-          # Grabs the PDF from the LATEX folder and moves it to public
-          cp LATEX/main.pdf public/main.pdf 
+          cp main.pdf public/ 
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
