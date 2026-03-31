@@ -1,0 +1,51 @@
+\chapter{Machine Learning Architectures}
+
+This chapter introduces the theoretical foundations of the machine learning algorithms employed in this thesis. Two fundamentally different architectures were utilized to tackle the dual objectives of this research: Generative Pre--trained Transformers (specifically minGPT) were used for the generative task of discovering novel polymer structures, while Multi--Layer Perceptrons (MLP) were deployed for the regression task of predicting the absorption capacity. Additionally, we discuss K--Fold Cross--Validation, a critical statistical method used to ensure the robustness of our predictive models given the constraints of a limited dataset.
+
+\section{Artificial Neural Networks and Multi--Layer Perceptrons}
+\label{sec:mlp}
+
+Artificial Neural Networks (ANNs) are a class of machine learning models inspired by the biological neural networks that constitute animal brains. The most fundamental and widely used feedforward ANN is the Multi--Layer Perceptron (MLP). 
+
+An MLP consists of at least three layers of interconnected nodes, or "neurons": an input layer, one or more hidden layers, and an output layer.  Except for the input nodes, each node is a neuron that uses a nonlinear activation function. The data flows in a single direction — from the input to the output — hence the designation "feedforward."
+
+Mathematically, the calculation carried out at a given hidden layer $l$ can be described as:
+\begin{equation}
+	\mathbf{h}^{(l)} = \sigma \left( \mathbf{W}^{(l)} \mathbf{h}^{(l-1)} + \mathbf{b}^{(l)} \right)
+\end{equation}
+where $\mathbf{h}^{(l-1)}$ is the input from the previous layer, $\mathbf{W}^{(l)}$ is the weight matrix, $\mathbf{b}^{(l)}$ is the bias vector, and $\sigma$ represents a non--linear activation function, such as the Rectified Linear Unit (ReLU) or the Sigmoid function. 
+
+During the training phase, the network learns to map inputs to outputs by adjusting its weights and biases to minimize a predefined loss function (e.g., Mean Squared Error for regression tasks). This optimization is typically achieved using the Backpropagation algorithm combined with gradient descent methods like Adam \cite{kingma2014adam}.
+
+In the context of this thesis, the MLP is tasked with predicting a continuous variable: the absorption capacity ($mg/g$) of a polymer--molecule pair. The input layer receives a high dimensional feature vector containing topological, thermodynamic, and electronic descriptors extracted from the SMILES and P--SMILES strings. Through its hidden layers, the MLP learns the complex, non--linear mappings between these chemical features and the target efficiency metric.
+
+\section{Generative Pre--trained Transformers (GPT) and minGPT}
+\label{sec:mingpt}
+
+While MLPs excel at finding patterns in fixed--size numerical arrays, they are not naturally suited for processing sequential data or generating new sequences. For the task of generating novel chemical structures, we turn to the Transformer architecture, introduced by Vaswani et al. in 2017 \cite{vaswani2017attention}.
+
+Transformers rely entirely on an "attention mechanism" to draw global dependencies between input and output sequences, dispensing with the recurrence and convolutions used in prior sequence models. Specifically, the Generative Pre--trained Transformer (GPT) family \cite{radford2018improving} utilizes a decoder--only architecture designed for autoregressive tasks.  In autoregressive generation, the model predicts the next token in a sequence given all previous tokens.
+
+The core of the GPT architecture is the self--attention mechanism, computed as:
+\begin{equation}
+	\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+where $Q$, $K$, and $V$ represent the Query, Key, and Value matrices respectively, and $d_k$ is the dimension of the keys. This allows the model to "attend" to different parts of the generated sequence, learning long--range dependencies — a crucial feature when dealing with the rigid syntax of chemical line notations.
+
+In this work, we utilize \textbf{minGPT}, a minimal, highly readable, and customizable implementation of the GPT architecture created by Andrej Karpathy. By treating the generation of synthetic P--SMILES strings as a natural language modeling problem, we train the minGPT wrapper on a dataset of valid polymer strings. The model learns the complex grammatical rules of P--SMILES (e.g., balancing parentheses for branches, matching ring closure digits) and can consequently generate entirely new, syntactically valid polymer structures that could serve as potential wastewater absorbents.
+
+\section{K--Fold Cross--Validation}
+\label{sec:kfold}
+
+A pervasive challenge in applying machine learning to specific physicochemical domains — such as polymer--based wastewater remediation — is data scarcity. Training complex models like MLPs on limited data frequently leads to overfitting, where the model memorizes the training examples but fails to generalize to unseen chemical combinations.
+
+To rigorously evaluate model performance and tune hyperparameters under these constraints, we employed K--Fold Cross--Validation.  In this resampling procedure, the entire dataset is randomly partitioned into $K$ equal--sized, mutually exclusive subsets or "folds." 
+
+The cross--validation process then proceeds in $K$ iterations. In each iteration $i$:
+\begin{enumerate}
+	\item The $i$--th fold is retained as the validation set;
+	\item The remaining $K-1$ folds are combined to form the training set;
+	\item The model is trained from scratch on the training set and evaluated on the validation set.
+\end{enumerate}
+
+Once all $K$ iterations are complete, the evaluation metrics (such as the Mean Absolute Error or $R^2$ score) are averaged across all folds to produce a single, reliable performance estimate. This technique ensures that every data point in our carefully curated dataset is used for both training and validation exactly once. By systematically rotating the test set, K--Fold Cross--Validation provides a robust and unbiased assessment of the MLP's predictive feasibility, giving us confidence in the model's true generalization capabilities despite the underlying data scarcity.

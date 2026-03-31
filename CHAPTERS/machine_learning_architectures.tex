@@ -5,7 +5,7 @@ This chapter introduces the theoretical foundations of the machine learning algo
 \section{Artificial Neural Networks and Multi--Layer Perceptrons}
 \label{sec:mlp}
 
-Artificial Neural Networks (ANNs) are a class of machine learning models inspired by the biological neural networks that constitute animal brains. The most fundamental and widely used feedforward ANN is the Multi--Layer Perceptron (MLP). 
+Artificial Neural Networks (ANNs) are a class of machine learning models inspired by the biological neural networks that constitute animal brains. The most fundamental and widely used feedforward ANN is the Multi--Layer Perceptron (MLP).
 
 An MLP consists of at least three layers of interconnected nodes, or "neurons": an input layer, one or more hidden layers, and an output layer.  Except for the input nodes, each node is a neuron that uses a nonlinear activation function. The data flows in a single direction — from the input to the output — hence the designation "feedforward."
 
@@ -13,7 +13,7 @@ Mathematically, the calculation carried out at a given hidden layer $l$ can be d
 \begin{equation}
 	\mathbf{h}^{(l)} = \sigma \left( \mathbf{W}^{(l)} \mathbf{h}^{(l-1)} + \mathbf{b}^{(l)} \right)
 \end{equation}
-where $\mathbf{h}^{(l-1)}$ is the input from the previous layer, $\mathbf{W}^{(l)}$ is the weight matrix, $\mathbf{b}^{(l)}$ is the bias vector, and $\sigma$ represents a non--linear activation function, such as the Rectified Linear Unit (ReLU) or the Sigmoid function. 
+where $\mathbf{h}^{(l-1)}$ is the input from the previous layer, $\mathbf{W}^{(l)}$ is the weight matrix, $\mathbf{b}^{(l)}$ is the bias vector, and $\sigma$ represents a non--linear activation function, such as the Rectified Linear Unit (ReLU) or the Sigmoid function.
 
 During the training phase, the network learns to map inputs to outputs by adjusting its weights and biases to minimize a predefined loss function (e.g., Mean Squared Error for regression tasks). This optimization is typically achieved using the Backpropagation algorithm combined with gradient descent methods like Adam \cite{kingma2014adam}.
 
@@ -24,22 +24,80 @@ In the context of this thesis, the MLP is tasked with predicting a continuous va
 
 While MLPs excel at finding patterns in fixed--size numerical arrays, they are not naturally suited for processing sequential data or generating new sequences. For the task of generating novel chemical structures, we turn to the Transformer architecture, introduced by Vaswani et al. in 2017 \cite{vaswani2017attention}.
 
-Transformers rely entirely on an "attention mechanism" to draw global dependencies between input and output sequences, dispensing with the recurrence and convolutions used in prior sequence models. Specifically, the Generative Pre--trained Transformer (GPT) family \cite{radford2018improving} utilizes a decoder--only architecture designed for autoregressive tasks.  In autoregressive generation, the model predicts the next token in a sequence given all previous tokens.
+Transformers rely entirely on an ``attention mechanism'' to draw global dependencies between input and output sequences, dispensing with the recurrence and convolutions used in prior sequence models. Specifically, the Generative Pre--trained Transformer (GPT) family \cite{radford2018improving} utilizes a decoder--only architecture designed for autoregressive tasks.  In autoregressive generation, the model predicts the next token in a sequence given all previous tokens.
 
-The core of the GPT architecture is the self--attention mechanism, computed as:
+The core computational unit of the Transformer is the self--attention mechanism, computed as:
 \begin{equation}
 	\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 \end{equation}
-where $Q$, $K$, and $V$ represent the Query, Key, and Value matrices respectively, and $d_k$ is the dimension of the keys. This allows the model to "attend" to different parts of the generated sequence, learning long--range dependencies — a crucial feature when dealing with the rigid syntax of chemical line notations.
+where $Q$, $K$, and $V$ represent the Query, Key, and Value matrices respectively, and $d_k$ is the dimension of the keys. Conceptually, the Query represents ``what am I looking for?'', the Key represents ``what do I contain?'', and the Value represents ``what information should I pass along?''. The scaling factor $\sqrt{d_k}$ prevents vanishing gradients for large key dimensions. This mechanism allows every position in the sequence to attend to all other positions simultaneously, enabling the model to learn long--range dependencies — a crucial feature when dealing with the rigid syntax of chemical line notations.
 
-In this work, we utilize \textbf{minGPT}, a minimal, highly readable, and customizable implementation of the GPT architecture created by Andrej Karpathy. By treating the generation of synthetic P--SMILES strings as a natural language modeling problem, we train the minGPT wrapper on a dataset of valid polymer strings. The model learns the complex grammatical rules of P--SMILES (e.g., balancing parentheses for branches, matching ring closure digits) and can consequently generate entirely new, syntactically valid polymer structures that could serve as potential wastewater absorbents.
+\subsection{Transformer Architecture Components}
+\label{sec:transformer_components}
+
+Beyond the attention mechanism, the Transformer architecture comprises several interconnected components that together enable effective sequence modeling.
+
+\textbf{Positional Encoding.} Unlike recurrent networks that process sequences step-by-step, the Transformer has no inherent notion of token order. Positional encodings inject sequence position information by adding a deterministic pattern to the token embeddings. The original Transformer uses sinusoidal functions of different frequencies:
+\begin{equation}
+	PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \quad
+	PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+\end{equation}
+where $pos$ is the position and $i$ is the dimension index. These encodings allow the model to attend to relative positions effectively.
+
+\textbf{Multi-Head Attention.} Rather than performing a single attention function, the Transformer employs multiple attention heads in parallel. Each head learns different aspects of the relationships between tokens:
+\begin{equation}
+	\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)W^O
+\end{equation}
+where $\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$. This allows the model to jointly attend to information from different representation subspaces at different positions.
+
+\textbf{Feed-Forward Networks.} After each attention layer, a position-wise feed-forward network is applied:
+\begin{equation}
+	\text{FFN}(x) = \sigma(xW_1 + b_1)W_2 + b_2
+\end{equation}
+where $\sigma$ is typically the GELU activation function. This component enables the model to perform non-linear transformations on each position independently.
+
+\textbf{Residual Connections and Layer Normalization.} Each sub-layer (attention and feed-forward) is wrapped with a residual connection followed by layer normalization:
+\begin{equation}
+	x \leftarrow \text{LayerNorm}(x + \text{Sublayer}(x))
+\end{equation}
+These components stabilize training and enable gradient flow through very deep networks.
+
+\textbf{Encoder versus Decoder.} The original Transformer comprised both an encoder (processing the full input sequence) and a decoder (generating the output autoregressively). GPT employs a decoder-only architecture, using \emph{causal masking} to ensure that predictions for position $i$ can only depend on positions less than $i$. This is implemented as a triangular mask applied to the attention scores before softmax, preventing future tokens from influencing current predictions.
+
+\subsection{minGPT Implementation}
+\label{sec:mingpt_impl}
+
+In this work, we utilize \textbf{minGPT}, a minimal, highly readable, and customizable implementation of the GPT architecture created by Andrej Karpathy. The library implements the complete GPT model in approximately 300 lines of clear PyTorch code, making it ideal for understanding the internals of transformer-based language models.
+
+The minGPT architecture consists of the following components:
+\begin{itemize}
+	\item \textbf{Token Embedding Layer:} Converts integer token indices into dense vectors of dimension $d_{\text{model}}$.
+	\item \textbf{Position Embedding Layer:} Adds positional information to the token embeddings.
+	\item \textbf{Transformer Blocks:} Stacks of attention and feed-forward layers with residual connections. Each block applies LayerNorm, performs multi-head causal self-attention, applies LayerNorm again, and then processes through the feed-forward network.
+	\item \textbf{Language Modeling Head:} A linear layer that projects from the final embedding dimension back to the vocabulary size, producing logits over the next-token prediction.
+\end{itemize}
+
+The model is available in several sizes: \texttt{gpt-nano} (3 layers, 48 dimensions), \texttt{gpt-micro} (4 layers, 128 dimensions), \texttt{gpt-mini} (6 layers, 192 dimensions), and larger variants up to \texttt{gpt2-xl}. In this thesis, we employ the \texttt{gpt-nano} configuration to balance model capacity with computational efficiency for the polymer generation task.
+
+By treating the generation of synthetic P--SMILES strings as a natural language modeling problem, we train the minGPT model on a dataset of valid polymer strings. The model learns the complex grammatical rules of P--SMILES (e.g., balancing parentheses for branches, matching ring closure digits) and can consequently generate entirely new, syntactically valid polymer structures that could serve as potential wastewater absorbents.
+
+\subsection{Autoregressive Generation}
+\label{sec:autoregressive_generation}
+
+During inference, the model generates sequences autoregressively. Starting from an initial prompt (or a special start token), the model computes a probability distribution over the entire vocabulary for the next token:
+\begin{equation}
+	p(\text{token}_{t+1} \mid \text{token}_1, \ldots, \text{token}_t) = \text{softmax}\left(\frac{\text{logits}_t}{T}\right)
+\end{equation}
+where $T$ is the \emph{temperature} parameter controlling the randomness of sampling. Low temperatures (e.g., $T < 1$) make the distribution sharper, favoring high-probability tokens, while higher temperatures increase diversity at the risk of less coherent output.
+
+Additional generation strategies include \emph{top-k sampling}, which restricts sampling to the $k$ most probable tokens at each step, and \emph{top-p (nucleus) sampling}, which dynamically selects the smallest set of tokens whose cumulative probability exceeds a threshold $p$. These techniques balance the trade-off between generating plausible, grammatically correct structures and exploring novel chemical space.
 
 \section{K--Fold Cross--Validation}
 \label{sec:kfold}
 
 A pervasive challenge in applying machine learning to specific physicochemical domains — such as polymer--based wastewater remediation — is data scarcity. Training complex models like MLPs on limited data frequently leads to overfitting, where the model memorizes the training examples but fails to generalize to unseen chemical combinations.
 
-To rigorously evaluate model performance and tune hyperparameters under these constraints, we employed K--Fold Cross--Validation.  In this resampling procedure, the entire dataset is randomly partitioned into $K$ equal--sized, mutually exclusive subsets or "folds." 
+To rigorously evaluate model performance and tune hyperparameters under these constraints, we employed K--Fold Cross--Validation.  In this resampling procedure, the entire dataset is randomly partitioned into $K$ equal--sized, mutually exclusive subsets or "folds."
 
 The cross--validation process then proceeds in $K$ iterations. In each iteration $i$:
 \begin{enumerate}
