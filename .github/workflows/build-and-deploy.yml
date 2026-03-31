@@ -1,0 +1,34 @@
+name: Build and Deploy Thesis PDF
+
+on:
+  push:
+    branches: 
+      - main  # Change to 'master' if your default branch is named master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: LATEX  # Tells the compiler to run inside this folder
+          root_file: main.tex 
+
+      - name: Prepare publish directory
+        run: |
+          mkdir public
+          # Grabs the PDF from the LATEX folder and moves it to public
+          cp LATEX/main.pdf public/main.pdf 
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
