@@ -65,7 +65,7 @@ So we have a model that can generate novel, and valid p-smiles, this is one part
 
 ----
 
-# Predictive Modeling of adsorption Capacity
+# Predictive Modeling of Adsorption Capacity
 
 To test the ability of a simple model to predict the CAPACITY, given the polymer features, molecule features, as well as the WATER_PH and CONCENTRATION, I tried to use a small MLP (Multi-Layer Perceptron).
 
@@ -147,6 +147,3 @@ The PeeSmileGenerative model was trained on syntethic data (Pl1M dataset), there
 The dataset is not automatically converted to SMILES and P-SMILES string but it only reports the material used and the target molecule. The conversion from a molecule to a SMILES string is straightforward, each of them is registered in the PubChem database. However for polymers the conversion to P-SMILES is not so straightforward, and my ability to do so is very limited. I made it possible and easy to change the representation of each material. (See `bio.__global__`)
 
 Lastly in this study we only used polymers, but many studies tried the use of many different materials, and dual-polymers. If possible a multi-format input could be of interest.
-
-
-
