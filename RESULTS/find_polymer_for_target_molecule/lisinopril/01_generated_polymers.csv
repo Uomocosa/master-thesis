@@ -1,0 +1,17 @@
+PSMILES
+*CCCCCCCCCOC(=O)NCCOCCCCCCCNC(=O)OCCCCCOC(=O)O*
+*[Si](*)(Cl)CCCCCCOCCOc1ccc(/N=N/c2ccc(C)c([N+](=O)[O-])c2)cc1
+*Nc1cc([N+](=O)(=O)OC(OC)CN(*)CCOCCO)cc1C(F)(F)F
+*/C=C/c1cc([N+](=O)[O-])c(C(C)(C)c2ccc(C(C)(C)c3ccc(C(*)=O)cc3)cc2)cc1-c1ccccc1
+*CCCCCOc1ccc(-c2ccc(OCCOCCOC(=O)c3ccc(C(=O)O*)cc3)cc2)cc1
+*C(=O)NNC(=O)c1ccccc1*
+*/C=C(/*)c1ccc(C(=O)OCCCCCCCCC
+*CC(*)C(=O)OCC1CCOCCCO1C(=O)C1
+*CCCCCCCCCCCCCCCCCCCCCOC(=O)CCNC(=O)c1ccc(C(=O)NCCCCCCNC(=O)c2ccc(*)cc2)cc1
+*CC(*)c1cc(Cl)c(Br)c1Cl
+*CCCCCCCCCCCCCCCCCCCCCCCCCCCC(=O)N(c1ccc(CNC(=O)c2cccc(C(=O)N*)c2)cc1
+*Nc1ccc(NC(=O)CNCC(=O)c2cc(C(=O)Nc3ccc(*)cc3)cc2)cc1
+*Oc1ccc(Oc2ccc(C(=O)c3ccc(Oc4ccc(C(*)=O)cc4)cc3)cc2)cc1
+*Oc1ccc(/C=N/c2ccc(/C=N/c3ccc(CC(=O)Sc4ccc(C(*)=O)nc4)cc3)cc2)cc1C(C)(C)CC
+*CC(*)(C)C(=O)OCCCCOC(=O)OCCOC(=O)c1ccc(NC(C)Cc2ccc(-c3cccccc3)cc2)cc1
+*/C=C(/*)[Si](C)(C)CCCCCC

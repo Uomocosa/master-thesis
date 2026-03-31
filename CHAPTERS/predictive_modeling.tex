@@ -34,13 +34,54 @@ The dataset augmentation strategies described in Chapter 4 (interpolation and or
 
 The hyperparameter optimization process evaluated a wide range of configurations using both standard K-fold and Leave-One-Out cross-validation. The results provide insight into the model's predictive capability under realistic data constraints.
 
-Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of approximately 0.42 using LOOCV evaluation. This result is noteworthy given the extreme data scarcity and the inherent complexity of polymer-molecule interactions. A Q² of 0.42 indicates that the model explains approximately 42\% of the variance in the absorption capacity, capturing a meaningful portion of the underlying relationship while leaving substantial room for improvement.
+Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of 0.984 using LOOCV evaluation. This result is noteworthy given the data scarcity and the inherent complexity of polymer-molecule interactions. A Q² of 0.984 indicates that the model explains approximately 98.4\% of the variance in the absorption capacity, capturing a substantial portion of the underlying relationship.
 
 The distribution of Q² scores across different hyperparameter configurations revealed several important findings. Configurations that included the SoftPlus output activation consistently outperformed those using a linear output, confirming the importance of constraining predictions to the physically meaningful non-negative range. The choice of feature subset had a moderate impact on performance, with configurations using the full feature set (including both Polymetrix descriptors and Morgan fingerprints) performing better than those using reduced feature sets.
 
 The interpolation-based data augmentation provided measurable benefits. The configuration using interpolation followed by origin point addition produced the most consistent cross-validation results, suggesting that the augmented data provides a more complete representation of the capacity-concentration relationship near the boundary conditions.
 
-It is important to interpret these results in context. The PDCC dataset contains observations from diverse polymer-molecule pairs under varying experimental conditions. The inherent heterogeneity of this dataset imposes an upper bound on achievable predictive performance. Even a perfect model could not achieve Q² = 1 if the experimental observations contain measurement noise or reflect genuine stochastic variation in the adsorption process. Nevertheless, a Q² of 0.42 demonstrates that machine learning can capture meaningful patterns in the polymer-molecule interaction space, providing utility for prioritizing candidates for experimental validation.
+It is important to interpret these results in context. The PDCC dataset contains observations from diverse polymer-molecule pairs under varying experimental conditions. The inherent heterogeneity of this dataset imposes an upper bound on achievable predictive performance. Even a perfect model could not achieve Q² = 1 if the experimental observations contain measurement noise or reflect genuine stochastic variation in the adsorption process. Nevertheless, a Q² of 0.984 demonstrates that machine learning can capture meaningful patterns in the polymer-molecule interaction space, providing utility for prioritizing candidates for experimental validation.
+
+\begin{table}[htbp]
+	\centering
+	\caption{LOOCV results across MLP hyperparameter configurations. Top 10 experiments ranked by Q².}
+	\label{tab:q2_leaderboard}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Experiment}                 & \textbf{Q²} & \textbf{MAE} & \textbf{RMSE} \\
+		\midrule
+		hd\_16\_8\_4\_4\_4                  & 0.984       & 1.499        & 6.485         \\
+		hd\_16\_8\_4\_4\_4\_only\_y\_scaler & 0.980       & 1.916        & 7.089         \\
+		hd\_16\_8\_4\_4\_4\_mae             & 0.972       & 2.757        & 8.533         \\
+		hd\_16\_8\_4\_4\_4\_4\_mae          & 0.918       & 4.558        & 14.518        \\
+		hd\_16\_8\_8\_8                     & 0.913       & 2.883        & 14.907        \\
+		hd\_16\_8\_4\_4\_4\_4               & 0.904       & 3.555        & 15.655        \\
+		hd\_32\_16\_8\_8                    & 0.900       & 3.592        & 15.959        \\
+		hd\_8\_8\_8\_8                      & 0.894       & 3.328        & 16.493        \\
+		hd\_16\_16\_16                      & 0.888       & 3.387        & 16.926        \\
+		hd\_32\_16\_8\_4                    & 0.834       & 4.567        & 20.583        \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{Exploratory Clustering Analysis of the PDCC Dataset}
+\label{sec:clustering_analysis}
+
+To gain insight into the structure of the PDCC dataset and identify natural groupings among polymer-molecule pairs, an Agglomerative Hierarchical Clustering (AHC) analysis was performed. AHC iteratively merges data points based on their feature similarity, producing a hierarchical structure that can be visualized as a dendrogram. Two complementary visualizations of the clustering results are presented: the dendrogram, which shows the full hierarchical merging process, and a two-dimensional projection via Principal Component Analysis (PCA), which reveals the spatial separation of clusters in reduced dimensionality.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.75\textwidth]{../RESULTS/ahc_clustering/ahc_dendrogram.png}
+	\caption{Agglomerative Hierarchical Clustering dendrogram of the PDCC dataset. The y-axis represents the linkage distance; lower merges indicate more similar data points.}
+	\label{fig:ahc_dendrogram}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.75\textwidth]{../RESULTS/ahc_clustering/cluster_plot.png}
+	\caption{PDCC data projected onto the first two principal components, colored by cluster assignment. Cluster membership reveals groupings driven primarily by polymer molecular weight (PC2) and drug molecular properties (PC1).}
+	\label{fig:ahc_cluster_pca}
+\end{figure}
 
 \section{Discussion of Model Limitations and Predictive Feasibility}
 \label{sec:model_limitations}
@@ -86,5 +127,21 @@ The complete computational pipeline integrates generation, validation, filtering
 First, the target molecule is converted to SMILES notation using the PubChem database. Second, the generative model produces a batch of candidate polymer P-SMILES strings. Third, invalid and duplicate structures are eliminated through validation. Fourth, the heuristic filters based on logP, TPSA, FMO gaps, and SA score are applied. Fifth, the MLP predicts the absorption capacity for each surviving candidate. Finally, candidates are ranked by predicted capacity, and those exceeding a specified threshold are returned as promising discoveries.
 
 This pipeline was tested with multiple target molecules, demonstrating its ability to identify candidate polymers with predicted capacities in excess of 1.0 mg/g. Visualization of capacity versus concentration and pH provides additional insight into how the predicted performance varies with experimental conditions, guiding the design of laboratory validation experiments.
+
+\begin{figure}[htbp]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{../RESULTS/predicted_capacities/plot_conc_aspirin.png}
+		\caption{Predicted absorption capacity vs. initial concentration for the top-ranked polymer against aspirin.}
+		\label{fig:pipeline_conc_aspirin}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{../RESULTS/predicted_capacities/plot_ph_aspirin.png}
+		\caption{Predicted absorption capacity vs. water pH for the top-ranked polymer against aspirin.}
+		\label{fig:pipeline_ph_aspirin}
+	\end{minipage}
+\end{figure}
 
 The pipeline is configurable, allowing adjustment of generation parameters (temperature, batch size), filter thresholds, and the target capacity cutoff. This flexibility enables adaptation to different application contexts, such as targeting different pollutant classes or optimizing for specific environmental conditions.

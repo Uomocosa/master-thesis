@@ -1,0 +1,10 @@
+PSMILES,valid_psmiles
+*CCCCCCCCCOC(=O)NCCOCCCCCCCNC(=O)OCCCCCOC(=O)O*,*CCCCCCCCCOC(=O)NCCOCCCCCCCNC(=O)OCCCCCOC(=O)O*
+*[Si](*)(Cl)CCCCCCOCCOc1ccc(/N=N/c2ccc(C)c([N+](=O)[O-])c2)cc1,*[Si](*)(Cl)CCCCCCOCCOc1ccc(/N=N/c2ccc(C)c([N+](=O)[O-])c2)cc1
+*/C=C/c1cc([N+](=O)[O-])c(C(C)(C)c2ccc(C(C)(C)c3ccc(C(*)=O)cc3)cc2)cc1-c1ccccc1,*/C=C/c1cc([N+](=O)[O-])c(C(C)(C)c2ccc(C(C)(C)c3ccc(C(*)=O)cc3)cc2)cc1-c1ccccc1
+*CCCCCOc1ccc(-c2ccc(OCCOCCOC(=O)c3ccc(C(=O)O*)cc3)cc2)cc1,*CCCCCOc1ccc(-c2ccc(OCCOCCOC(=O)c3ccc(C(=O)O*)cc3)cc2)cc1
+*C(=O)NNC(=O)c1ccccc1*,*C(=O)NNC(=O)c1ccccc1*
+*CCCCCCCCCCCCCCCCCCCCCOC(=O)CCNC(=O)c1ccc(C(=O)NCCCCCCNC(=O)c2ccc(*)cc2)cc1,*CCCCCCCCCCCCCCCCCCCCCOC(=O)CCNC(=O)c1ccc(C(=O)NCCCCCCNC(=O)c2ccc(*)cc2)cc1
+*Oc1ccc(Oc2ccc(C(=O)c3ccc(Oc4ccc(C(*)=O)cc4)cc3)cc2)cc1,*Oc1ccc(Oc2ccc(C(=O)c3ccc(Oc4ccc(C(*)=O)cc4)cc3)cc2)cc1
+*Oc1ccc(/C=N/c2ccc(/C=N/c3ccc(CC(=O)Sc4ccc(C(*)=O)nc4)cc3)cc2)cc1C(C)(C)CC,*Oc1ccc(/C=N/c2ccc(/C=N/c3ccc(CC(=O)Sc4ccc(C(*)=O)nc4)cc3)cc2)cc1C(C)(C)CC
+*/C=C(/*)[Si](C)(C)CCCCCC,*/C=C(/*)[Si](C)(C)CCCCCC

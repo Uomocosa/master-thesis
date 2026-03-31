@@ -1,0 +1,8 @@
+POLYMER_USED,DRUG,WATER_PH,CONCENTRATION,PREDICTED_CAPACITY
+*Oc1ccc(Oc2ccc(C(=O)c3ccc(Oc4ccc(C(*)=O)cc4)cc3)cc2)cc1,CN(C)C(=N)N=C(N)N,8.2,12.5,68.63859
+*Oc1ccc(/C=N/c2ccc(/C=N/c3ccc(CC(=O)Sc4ccc(C(*)=O)nc4)cc3)cc2)cc1C(C)(C)CC,CN(C)C(=N)N=C(N)N,8.2,12.5,0.9917877
+*CCCCCOc1ccc(-c2ccc(OCCOCCOC(=O)c3ccc(C(=O)O*)cc3)cc2)cc1,CN(C)C(=N)N=C(N)N,8.2,12.5,0.062114317
+*/C=C/c1cc([N+](=O)[O-])c(C(C)(C)c2ccc(C(C)(C)c3ccc(C(*)=O)cc3)cc2)cc1-c1ccccc1,CN(C)C(=N)N=C(N)N,8.2,12.5,2.5781429e-08
+*CCCCCCCCCCCCCCCCCCCCCOC(=O)CCNC(=O)c1ccc(C(=O)NCCCCCCNC(=O)c2ccc(*)cc2)cc1,CN(C)C(=N)N=C(N)N,8.2,12.5,1.8682255e-11
+*CCCCCCCCCOC(=O)NCCOCCCCCCCNC(=O)OCCCCCOC(=O)O*,CN(C)C(=N)N=C(N)N,8.2,12.5,8.665841e-13
+*[Si](*)(Cl)CCCCCCOCCOc1ccc(/N=N/c2ccc(C)c([N+](=O)[O-])c2)cc1,CN(C)C(=N)N=C(N)N,8.2,12.5,1.4432329e-13
