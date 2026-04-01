@@ -12,26 +12,16 @@ First, a systematic data acquisition pipeline was developed to extract experimen
 
 Second, a generative model based on the minGPT architecture was successfully adapted for polymer structure generation. The model learns the grammatical rules of P-SMILES notation and produces novel, chemically valid polymer structures. Evaluation showed that 57.6\% of generated P-SMILES strings were valid, and 100\% of valid generations were novel relative to the training set. This generative capability enables the exploration of a vast chemical space that would be impractical to sample through laboratory synthesis alone.
 
-Third, a predictive model based on the Multi-Layer Perceptron was developed to estimate adsorption capacity from chemical features. Systematic hyperparameter optimization using Leave-One-Out Cross-Validation identified configurations achieving a Q² score of approximately 0.42. While data scarcity imposes fundamental limitations, this result demonstrates that meaningful predictive patterns can be extracted from the available data.
+Third, a predictive model based on the Multi-Layer Perceptron was developed to estimate adsorption capacity from chemical features. Systematic hyperparameter optimization using Leave-One-Out Cross-Validation identified configurations achieving a Q² score of approximately 0.984. While data scarcity imposes fundamental limitations, this result demonstrates that meaningful predictive patterns can be extracted from the available data.
 
-Fourth, a heuristic filtering framework based on established chemical principles was implemented. Filters based on logP, TPSA, FMO theory, and synthetic accessibility effectively eliminate candidates that are unlikely to be effective or practical absorbents. The integration of these filters with the predictive model provides a balanced approach that combines domain knowledge with data-driven prediction.
+Fourth, a heuristic filtering framework based on established chemical principles was implemented. Filters based on logP, TPSA, FMO theory, and synthetic accessibility effectively eliminate candidates that are unlikely to be effective or practical adsorbents. The integration of these filters with the predictive model provides a balanced approach that combines domain knowledge with data-driven prediction.
 
 Fifth, the individual components were integrated into a complete computational pipeline that, given a target pharmaceutical molecule, generates candidate polymers, filters them based on chemical viability, and prioritizes them by predicted adsorption capacity. This pipeline represents a significant step toward computational acceleration of polymer discovery for environmental remediation.
 
 \section{Limitations and Challenges}
 \label{sec:limitations}
 
-Several limitations of the current work must be acknowledged and addressed in future research.
-
-Data scarcity remains the most critical challenge. The PDCC dataset contains only a few hundred experimental observations, orders of magnitude less than typical machine learning datasets. This scarcity limits the complexity of models that can be reliably trained and constrains the generalization capability of the predictive model. Future work should prioritize the creation of larger, standardized datasets through coordinated literature mining and experimental collaboration. Critically, data on failed adsorption experiments (where polymers showed little or no capacity for specific molecules) would be equally valuable as data on successes.
-
-Publication bias in the training data may skew the model toward predicting positive outcomes. The scientific literature preferentially reports successful results, potentially leaving gaps in the coverage of the polymer-molecule interaction space. Efforts to collect negative results or to generate synthetic negative examples could help mitigate this bias.
-
-The approximation of polymer features from capped monomers neglects higher-order structural properties. Real polymer adsorption behavior depends on chain length, molecular weight distribution, cross-linking density, and three-dimensional conformation. Future work incorporating more accurate polymer representations, such as molecular dynamics simulations of polymer chains, could improve feature quality and predictive accuracy.
-
-The P-SMILES representation, while robustly supported by cheminformatics tools, may not capture all chemically relevant information. Extensions to alternative polymer notations, such as BigSMILES, could provide richer structural representations at the cost of reduced tool support and data availability.
-
-Finally, the current work focuses exclusively on homopolymers. Many studies in the literature explore the use of dual-polymer systems and composite materials that may exhibit synergistic effects. Expanding the framework to handle multi-component materials would broaden its applicability to real-world wastewater treatment scenarios.
+Several limitations of the current work must be acknowledged and addressed in future research. Data scarcity remains the most critical challenge, as the PDCC dataset contains only a few hundred experimental observations, limiting both model complexity and generalization capability. Publication bias in the training data may skew predictions toward positive outcomes, and the approximation of polymer features from capped monomers neglects higher-order structural properties that influence adsorption behavior. Additionally, the focus on homopolymers and the P-SMILES representation may restrict the applicability of the framework to more complex real-world scenarios. A more detailed discussion of these limitations is provided in Section \ref{sec:model_limitations}.
 
 \section{Future Research Directions}
 \label{sec:future_directions}
@@ -51,6 +41,6 @@ Finally, experimental validation of the computationally predicted candidates is 
 \section{Closing Remarks}
 \label{sec:closing}
 
-This thesis has demonstrated the feasibility of applying machine learning techniques to the discovery of polymer absorbents for pharmaceutical removal from wastewater. The integration of generative modeling, chemical filtering, and predictive analytics provides a computational framework that can accelerate the identification of promising candidates and guide experimental efforts. While data scarcity remains a fundamental constraint, the results obtained show that meaningful patterns can be learned from the available data.
+This thesis has demonstrated the feasibility of applying machine learning techniques to the discovery of polymer adsorbents for pharmaceutical removal from wastewater. The integration of generative modeling, chemical filtering, and predictive analytics provides a computational framework that can accelerate the identification of promising candidates and guide experimental efforts. While data scarcity remains a fundamental constraint, the results obtained show that meaningful patterns can be learned from the available data.
 
 The broader implication of this work is the demonstration that computational approaches can complement traditional laboratory methods in materials discovery. As datasets grow and models improve, the vision of computationally designing materials for specific environmental applications becomes increasingly achievable. The framework developed here provides a foundation upon which future advances in data, models, and experimental validation can be built, ultimately contributing to the goal of sustainable water treatment through advanced materials science.

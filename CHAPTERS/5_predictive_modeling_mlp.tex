@@ -21,18 +21,22 @@ Training is performed using the Adam optimizer with mean squared error (MSE) as 
 
 The limited size of the PDCC dataset presents the most significant challenge for predictive modeling. With only a few hundred experimental observations available, standard machine learning practices that assume abundant data must be adapted. Several strategies were employed to maximize the effective information content of the available data and to obtain reliable performance estimates.
 
-K-Fold Cross-Validation, as described in Chapter 2, serves as the primary evaluation methodology. Rather than partitioning the data into a single train-test split, the dataset is divided into k equally sized folds. The model is trained k times, each time using k-1 folds for training and the remaining fold for validation. This approach ensures that every data point serves as both training and validation data exactly once, providing a comprehensive assessment of model performance.
+Leave-One-Out Cross-Validation (LOOCV), the extreme case of K-fold cross-validation where the number of folds equals the number of data points, serves as the primary evaluation methodology. Each fold contains a single observation, and the model is trained on all remaining data. While computationally expensive, LOOCV is particularly valuable for small datasets because it maximizes the amount of training data available in each iteration and provides an almost unbiased estimate of generalization error.
 
-Leave-One-Out Cross-Validation (LOOCV) represents the extreme case where k equals the number of data points. Each fold contains a single observation, and the model is trained on all remaining data. While computationally expensive, LOOCV is particularly valuable for small datasets because it maximizes the amount of training data available in each iteration and provides an almost unbiased estimate of generalization error.
+In addition to cross-validation, a comprehensive hyperparameter search was conducted to identify the optimal model configuration. The search space included the learning rate, the number of training epochs, the batch size, and the choice of feature subsets. For each configuration, the Q-squared (Q²) statistic was computed from the cross-validation results. The Q² statistic, analogous to the R² coefficient in standard regression, measures the proportion of variance in the target variable that is explained by the model. A Q² value of 1 indicates perfect prediction, while a value of 0 indicates that the model performs no better than predicting the mean of the training data. The Q² statistic is defined as:
 
-In addition to cross-validation, a comprehensive hyperparameter search was conducted to identify the optimal model configuration. The search space included the learning rate, the number of training epochs, the batch size, and the choice of feature subsets. For each configuration, the Q-squared (Q²) statistic was computed from the cross-validation results. The Q² statistic, analogous to the R² coefficient in standard regression, measures the proportion of variance in the target variable that is explained by the model. A Q² value of 1 indicates perfect prediction, while a value of 0 indicates that the model performs no better than predicting the mean of the training data.
+\begin{equation}
+\text{Q}^2 = 1 - \frac{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2}
+\end{equation}
+
+where $y_i$ is the actual value, $\hat{y}_i$ is the predicted value, $\bar{y}$ is the mean of the observed values, and $n$ is the number of observations.
 
 The dataset augmentation strategies described in Chapter 4 (interpolation and origin point addition) were applied prior to feature extraction. Different augmentation configurations were tested, and the combination that yielded the best cross-validation performance was selected for the final model.
 
 \section{Cross-Validation Results and Performance Metrics}
 \label{sec:cv_results}
 
-The hyperparameter optimization process evaluated a wide range of configurations using both standard K-fold and Leave-One-Out cross-validation. The results provide insight into the model's predictive capability under realistic data constraints.
+The hyperparameter optimization process evaluated a wide range of configurations using Leave-One-Out Cross-Validation. The results provide insight into the model's predictive capability under realistic data constraints.
 
 Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of 0.984 using LOOCV evaluation. This result indicates that the model explains approximately 98.4\% of the variance in the adsorption capacity.
 
@@ -44,7 +48,7 @@ These results were obtained on the augmented dataset; performance on the origina
 
 \begin{table}[htbp]
 	\centering
-	\caption{LOOCV results across MLP hyperparameter configurations. Top 10 experiments ranked by Q².}
+	\caption[LOOCV results across MLP hyperparameter configurations.]{LOOCV results across MLP hyperparameter configurations. Top 10 experiments ranked by Q².\footnote{The complete configuration for each experiment is documented in the corresponding folder under RESULTS/mlp\_experiments/.}}
 	\label{tab:q2_leaderboard}
 	\begin{tabular}{lccc}
 		\toprule
@@ -63,6 +67,20 @@ These results were obtained on the augmented dataset; performance on the origina
 		\bottomrule
 	\end{tabular}
 \end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{RESULTS/mlp_experiments/experiment_hd_16_8_4_4_4/parity_plot.png}
+	\caption{Parity plot for the optimal MLP configuration (Q² = 0.984). Predicted vs. actual adsorption capacity values.}
+	\label{fig:parity_best}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{RESULTS/mlp_experiments/experiment_hd_16_8_4_4_4_only_x_scaler/parity_plot.png}
+	\caption{Parity plot for the MLP configuration without Y-scaling (Q² = 0.413). The increased scatter demonstrates the importance of target scaling for prediction quality.}
+	\label{fig:parity_no_yscaler}
+\end{figure}
 
 \section{Exploratory Clustering Analysis of the PDCC Dataset}
 \label{sec:clustering_analysis}
@@ -88,6 +106,6 @@ To gain insight into the structure of the PDCC dataset and identify natural grou
 
 Despite the encouraging results, several limitations must be acknowledged. The most fundamental limitation is data scarcity. The PDCC dataset contains orders of magnitude fewer observations than typical machine learning benchmarks. Training deep neural networks on such limited data risks overfitting, where the model memorizes specific training examples rather than learning generalizable patterns. While cross-validation provides a measure of generalization performance, the confidence intervals on these estimates are wide due to the small sample size.
 
-The second limitation concerns the representativeness of the training data. The scraped literature reports successful adsorption experiments, potentially introducing publication bias. Polymer-molecule pairs that did not exhibit significant adsorption may be underrepresented or absent from the dataset. A robust predictive model requires data on both successes and failures to learn the boundary between effective and ineffective absorbents.
+The second limitation concerns the representativeness of the training data. The scraped literature reports successful adsorption experiments, potentially introducing publication bias. Polymer-molecule pairs that did not exhibit significant adsorption may be underrepresented or absent from the dataset. A robust predictive model requires data on both successes and failures to learn the boundary between effective and ineffective adsorbents.
 
 The third limitation relates to feature quality. As discussed in Chapter 4, polymer features are computed from capped monomers rather than full polymer chains. This approximation neglects higher-order polymer properties such as chain length distribution, cross-linking density, and three-dimensional conformation, all of which influence adsorption behavior.

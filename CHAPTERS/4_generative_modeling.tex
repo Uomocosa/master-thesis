@@ -1,7 +1,7 @@
 \chapter{Generative Modeling for Molecular Discovery}
 \label{sec:generative_chapter}
 
-Beyond predictive modeling, this thesis explores the complementary task of generating novel polymer structures that could serve as effective wastewater absorbents. Rather than relying solely on known polymers, a generative approach enables the systematic exploration of a theoretically infinite chemical space. This chapter describes the implementation and evaluation of a generative model for producing valid P-SMILES strings.
+Beyond predictive modeling, this thesis explores the complementary task of generating novel polymer structures that could serve as effective wastewater adsorbents. Rather than relying solely on known polymers, a generative approach enables the systematic exploration of a theoretically infinite chemical space. This chapter describes the implementation and evaluation of a generative model for producing valid P-SMILES strings.
 
 \section{The minGPT Wrapper Implementation}
 \label{sec:mingpt_wrapper}
@@ -54,7 +54,7 @@ The generation results are summarized in Table \ref{tab:generation_results}. The
 	\end{tabular}
 \end{table}
 
-The high novelty rate is particularly significant for the drug discovery pipeline envisioned in this thesis. A generative model that merely reproduces known structures would offer limited value for discovering novel absorbents. The ability to generate truly novel polymers, combined with the filtering and prediction stages described in subsequent chapters, enables a closed-loop workflow for computational polymer discovery.
+The high novelty rate is particularly significant for the drug discovery pipeline envisioned in this thesis. A generative model that merely reproduces known structures would offer limited value for discovering novel adsorbents. The ability to generate truly novel polymers, combined with the filtering and prediction stages described in subsequent chapters, enables a closed-loop workflow for computational polymer discovery.
 
 \begin{figure}[htbp]
 	\centering
@@ -66,4 +66,4 @@ The high novelty rate is particularly significant for the drug discovery pipelin
 \section{Integration with the Discovery Pipeline}
 \label{sec:pipeline_integration}
 
-The generative model serves as the foundation of the broader computational pipeline developed in this thesis. Generated polymers enter a multi-stage filtering and evaluation process. First, validity checking ensures that only chemically valid structures proceed. Second, heuristic filters based on chemical properties (discussed in Chapter 5) eliminate structures that are unlikely to be effective absorbents. Third, for the most promising candidates, the predictive model estimates the expected adsorption capacity against the target pharmaceutical. This integrated approach represents a shift from traditional trial-and-error laboratory synthesis toward a data-driven, computationally accelerated discovery workflow.
+The generative model serves as the foundation of the broader computational pipeline developed in this thesis. Generated polymers enter a multi-stage filtering and evaluation process. First, validity checking ensures that only chemically valid structures proceed. Second, heuristic filters based on chemical properties (discussed in Chapter 5) eliminate structures that are unlikely to be effective adsorbents. Third, for the most promising candidates, the predictive model estimates the expected adsorption capacity against the target pharmaceutical. This integrated approach represents a shift from traditional trial-and-error laboratory synthesis toward a data-driven, computationally accelerated discovery workflow.

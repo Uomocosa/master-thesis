@@ -8,7 +8,7 @@
   },
   "file_scan_exclusions": [
     // "**/.venv",
-    "**/build",
+    // "**/build",
     "**/target",
     "**/node_modules",
     "**/*.log",
