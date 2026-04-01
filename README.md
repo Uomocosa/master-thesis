@@ -19,12 +19,12 @@ Here's what I've done for my master thesis.
 
 I have created a mingpt wrapper to generate new valid smiles and polymer smiles given a dataset of them. Note that the p-smiles dataset was syntetic. 
 
-I have scraped many papers, that talk about polymer-molecule interaction, specifically they use a polymer to absorb one or more molecule in water, mosty wastewater. I searched for data with the following metrics, to train my ML model.
+I have scraped many papers, that talk about polymer-molecule interaction, specifically they use a polymer to adsorb one or more molecule in water, mosty wastewater. I searched for data with the following metrics, to train my ML model.
 - PH: ph of the water that the sponge and compound was placed in.
 - CONCENTRATION: ${\text{mg} \over \text{L}}$
 - CAPACITY: ${\text{mg} \over \text{g}}$
 Where the CONCENTRATION is the starting amount of the pharmaceutical in the water before the polymer is added.
-And the CAPACITY measures how many milligrams of the pollutant were absorbed by every single gram of the polymer material used.
+And the CAPACITY measures how many milligrams of the pollutant were adsorbed by every single gram of the polymer material used.
 My hope was that with sufficient data, we might be able to train a model capable of predicting the CAPACITY, given a new polymer-molecule couple. However the data is really scarse, so at the moment this is not possible.
 
 I augmented the data, using interpolation where possible
@@ -88,7 +88,7 @@ Note! While featurizing the molecule is straigh forwars as all python library us
 
 # Polymer Filtering
 
-From different papars we found that usually polymers that we search for (polymers that can absorb specific molecules in water) have some disting features. Namely:
+From different papars we found that usually polymers that we search for (polymers that can adsorb specific molecules in water) have some disting features. Namely:
 
 High logp: high enough to remain a solid, insoluble phase
 
@@ -145,7 +145,7 @@ The function uses sensible defaults to be used more easily.
 
 # Conclusion and Future Work
 
-The first thing that need to be addressed in any future work, using this "framework"/"pipeline" is the scarsity of experiment results, to see the adsorption of the polymer for specific molecules, for many different polymers, molecules, and in different waters. Not only good results, but also failures, so many data of polymers that do not absorb specific molecules.
+The first thing that need to be addressed in any future work, using this "framework"/"pipeline" is the scarsity of experiment results, to see the adsorption of the polymer for specific molecules, for many different polymers, molecules, and in different waters. Not only good results, but also failures, so many data of polymers that do not adsorb specific molecules.
 
 This pipeline assumes that the polymers are all represented in a p-smiles string notation. If data emerges, it could be interesting see the results using diffrent notations, suchs as BigSmiles.
 
