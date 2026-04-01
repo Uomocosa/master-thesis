@@ -5,7 +5,7 @@
 % --------------------------------------------------------
 
 % use twoside option in case of double-sided print
-\documentclass[12pt,a4paper,oneside]{report} 
+\documentclass[12pt,a4paper,oneside]{report}
 \usepackage[utf8]{inputenc}
 
 % customize your packages in the following file
@@ -24,7 +24,7 @@
 % --------------------------------------------------------
 % cover page
 \input{title_page.tex}
-\cleardoublepage 
+\cleardoublepage
 \setcounter{page}{1}
 
 % --------------------------------------------------------
@@ -37,26 +37,26 @@
 % input your chapters here
 
 % INTRODUCTION (Unnumbered and not in TOC)
-\input{CHAPTERS/introduction.tex}
+\input{CHAPTERS/0_introduction.tex}
 \cleardoublepage
 
-\input{CHAPTERS/biological_background.tex}
+\input{CHAPTERS/1_biological_background.tex}
 \cleardoublepage
 
-\input{CHAPTERS/machine_learning_architectures.tex}
-\cleardoublepage % opens next new chapters in right pages for two-sided printing
+\input{CHAPTERS/2_machine_learning_architectures.tex}
+\cleardoublepage
 
-\input{CHAPTERS/data_acquisition.tex}
-\cleardoublepage 
+\input{CHAPTERS/3_data_acquisition.tex}
+\cleardoublepage
 
-\input{CHAPTERS/generative_modeling.tex}
-\cleardoublepage 
+\input{CHAPTERS/4_generative_modeling.tex}
+\cleardoublepage
 
-\input{CHAPTERS/predictive_modeling.tex}
-\cleardoublepage 
+\input{CHAPTERS/5_predictive_modeling.tex}
+\cleardoublepage
 
-\input{CHAPTERS/conclusions.tex}
-\cleardoublepage 
+\input{CHAPTERS/6_conclusions.tex}
+\cleardoublepage
 
 % --------------------------------------------------------
 % input final stuff here (appendices, bibliography)
@@ -65,10 +65,10 @@
 % \input{CHAPTERS/appendix_A.tex}
 % \cleardoublepage % opens next new chapters in right pages for two-sided printing
 
-\input{CHAPTERS/references.tex}
+\input{CHAPTERS/10_references.tex}
 \cleardoublepage % opens next new chapters in right pages for two-sided printing
 
-\input{CHAPTERS/acknow.tex}
+\input{CHAPTERS/11_acknow.tex}
 \cleardoublepage % opens next new chapters in right pages for two-sided printing
 
 
