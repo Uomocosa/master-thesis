@@ -4,6 +4,15 @@
 
 This is a really simple an brief summary of each chapter in my thesis.
 
+To build the pdf locally run the following commands:
+1. `pdflatex -output-directory=build main.tex`
+2. `bibtex build/main`
+3. `pdflatex -output-directory=build main.tex`
+4. `pdflatex -output-directory=build main.tex`
+
+All in one:
+`pdflatex -output-directory=build main.tex; bibtex build/main; pdflatex -output-directory=build main.tex; pdflatex -output-directory=build main.tex`
+
 # Introduction
 
 Here's what I've done for my master thesis.

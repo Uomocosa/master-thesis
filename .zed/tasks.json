@@ -1,0 +1,14 @@
+[
+    {
+        "label": "run",
+        "command": "pdflatex -output-directory=build main.tex; bibtex build/main; pdflatex -output-directory=build main.tex; pdflatex -output-directory=build main.tex",
+        // "env": { "LOGURU_LEVEL": "DEBUG" },
+        "use_new_terminal": false,
+        "allow_concurrent_runs": false,
+        "reveal": "always",
+        "hide": "never",
+        "shell": "system",
+        "show_summary": false,
+        "show_command": true
+    },
+]
