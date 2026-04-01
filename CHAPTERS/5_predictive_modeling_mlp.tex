@@ -85,21 +85,29 @@ These results were obtained on the augmented dataset; performance on the origina
 \section{Exploratory Clustering Analysis of the PDCC Dataset}
 \label{sec:clustering_analysis}
 
-To gain insight into the structure of the PDCC dataset and identify natural groupings among polymer-molecule pairs, an Agglomerative Hierarchical Clustering (AHC) analysis was performed. AHC iteratively merges data points based on their feature similarity, producing a hierarchical structure that can be visualized as a dendrogram. Two complementary visualizations of the clustering results are presented: the dendrogram, which shows the full hierarchical merging process, and a two-dimensional projection via Principal Component Analysis (PCA), which reveals the spatial separation of clusters in reduced dimensionality.
+To gain insight into the structure of the PDCC dataset and identify natural groupings among polymer-molecule pairs, an Agglomerative Hierarchical Clustering (AHC) analysis was performed. AHC iteratively merges data points based on their feature similarity using Ward linkage, which minimizes within-cluster variance at each merge step. This bottom-up approach produces a hierarchical structure that can be visualized as a dendrogram. The analysis reveals that the dataset exhibits meaningful structure at multiple scales, with natural cluster boundaries identifiable by examining the dendrogram's vertical gaps.
+
+The dendrogram (Figure~\ref{fig:ahc_dendrogram}) displays the full hierarchical merging process. Each leaf at the bottom represents an individual polymer-molecule observation, while the root at the top represents the single cluster containing all observations. The y-axis shows the linkage distance at which merges occur: small distances indicate that very similar observations are being combined, while large jumps in distance signal the formation of broader groups. By cutting the dendrogram at different heights, one can obtain different numbers of clusters depending on the desired granularity.
+
+The PCA projection (Figure~\ref{fig:ahc_cluster_pca}) provides a complementary two-dimensional view of the clustering results. PCA reduces the high-dimensional feature space to the two principal components that capture the most variance in the data. Analysis of the PCA loadings reveals the chemical features driving each component. The first principal component (PC1, x-axis) is dominated by drug molecular properties, with drug molecular weight contributing 88.3\% to this axis, followed by drug solubility descriptors (SMR VSA5, 27.4\%) and topological surface area (26.6\%). The second principal component (PC2, y-axis) is primarily driven by polymer structural features, with polymer sidechain molecular weight contributing 71.6\% and full polymer molecular weight contributing 45.9\%. Notably, the experimental variables concentration and pH contribute minimally to both components (combined <0.15), indicating that the natural groupings in the data arise from chemical structure rather than experimental conditions.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{RESULTS/ahc_clustering/ahc_dendrogram.png}
-	\caption{Agglomerative Hierarchical Clustering dendrogram of the PDCC dataset. The y-axis represents the linkage distance; lower merges indicate more similar data points.}
+	\caption{Agglomerative Hierarchical Clustering dendrogram of the PDCC dataset. Each leaf represents an individual observation; the y-axis shows the linkage distance at which merges occur. Larger vertical gaps between merge heights indicate natural cluster boundaries. Cutting the dendrogram at different heights yields different numbers of clusters, from fine-grained subgroups at low heights to broader categories at higher cuts.}
 	\label{fig:ahc_dendrogram}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.75\textwidth]{RESULTS/ahc_clustering/cluster_plot.png}
-	\caption{PDCC data projected onto the first two principal components, colored by cluster assignment. Cluster membership reveals groupings driven primarily by polymer molecular weight (PC2) and drug molecular properties (PC1).}
+	\caption{PDCC data projected onto the first two principal components, colored by cluster assignment. PC1 (x-axis) is driven primarily by drug molecular properties (88\% drug molecular weight contribution), while PC2 (y-axis) is driven by polymer molecular weight from sidechains (72\% contribution). The spatial separation of clusters reflects these underlying structural groupings.}
 	\label{fig:ahc_cluster_pca}
 \end{figure}
+
+The cluster profiles reveal that groups are distinguished primarily by drug structural fingerprints (specifically bits related to heteroatom density and halogen substituents) and polymer sidechain characteristics. Five clusters were identified using an automatic silhouette-based method applied to the PCA-reduced space, yielding a silhouette score of 0.984. The silhouette score measures how similar each observation is to its own cluster compared to other clusters, with values ranging from -1 to 1; high values indicate well-defined clusters. As expected given that the PDCC dataset contains only 20 unique polymers spread across 218 observations (averaging approximately 10 observations per polymer), the clustering naturally groups observations primarily by polymer identity. This structural homogeneity within polymer groups limits the generalizability of cluster-based insights to the broader space of candidate polymers.
+
+A critical observation is that the clustering structure does not align with adsorption performance. Analysis of capacity distributions within each cluster shows substantial overlap, with no single cluster exhibiting systematically higher or lower adsorption capacities. This indicates that the structural features driving cluster membership (primarily molecular size descriptors) are not the same factors that determine adsorption effectiveness. In other words, polymers and drugs that are structurally similar to each other do not necessarily exhibit similar adsorption behavior. This finding reinforces the importance of the MLP's role: while clustering captures broad structural similarity, the predictive model must learn the more subtle chemical interactions that govern adsorption capacity.
 
 \section{Discussion of Model Limitations}
 \label{sec:model_limitations}
