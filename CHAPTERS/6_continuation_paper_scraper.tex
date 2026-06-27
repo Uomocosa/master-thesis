@@ -13,7 +13,7 @@ The manual curation that produced the PDCC dataset is accurate but slow, and it 
 \subsection{Retrieval and Extraction}
 \label{sec:cont_retrieval}
 
-In the first stage, the bibliographic references of a small set of seed papers are parsed with Grobid \cite{grobid}, a machine-learning service that extracts structured metadata from scholarly PDFs, producing a list of candidate Digital Object Identifiers (DOIs). In the second stage, these candidates are expanded and retrieved through the OpenAlex catalogue \cite{openalex}, an open index of scholarly works, downloading roughly $2{,}200$ open-access papers on pharmaceutical adsorption. In the third stage, each paper is submitted to an LLM together with a structured prompt that asks it to return, for every experiment reported in the text, the same five fields that define the PDCC dataset: the polymer, the drug, the solution pH, the initial concentration, and the adsorption capacity. This step produced more than $33{,}000$ candidate rows, which automatic quality filtering then reduced to the subset of rows in which all five fields are present and mutually consistent.
+In the first stage, candidate papers are gathered from two complementary sources. The first is citation snowballing: the bibliographic references of a small set of seed papers are parsed with Grobid \cite{grobid}, a machine-learning service that extracts structured metadata from scholarly PDFs, producing a list of cited Digital Object Identifiers (DOIs) to follow. The second is a direct query of the OpenAlex catalogue \cite{openalex}, an open index of scholarly works, by topic and keyword --- for example the \emph{Adsorption} topic combined with terms such as \emph{pharmaceutical}, \emph{adsorption}, and \emph{polymer} --- which surfaces relevant work that the seed papers do not cite. In the second stage, the union of these candidates is retrieved and filtered to open-access full texts, yielding roughly $2{,}200$ downloadable papers on pharmaceutical adsorption. In the third stage, each paper is submitted to an LLM together with a structured prompt that asks it to return, for every experiment reported in the text, the same five fields that define the PDCC dataset: the polymer, the drug, the solution pH, the initial concentration, and the adsorption capacity. This step produced more than $33{,}000$ candidate rows, which automatic quality filtering then reduced to the subset of rows in which all five fields are present and mutually consistent.
 
 \subsection{Chemical-Structure Resolution}
 \label{sec:cont_resolution}
@@ -23,23 +23,25 @@ The extracted measurements are expressed in free-text chemical names, whereas th
 \subsection{A Controlled Comparison of LLM Extractors}
 \label{sec:cont_comparison}
 
-A distinctive feature of the implementation is that every paper was analysed independently by four different LLMs --- DeepSeek, Kimi, Gemma, and Claude Opus --- and, for the open-weight Gemma model, under two input modalities: the PDF rendered as text and the PDF rendered as page images. Because all models were given an identical corpus, the extraction step doubles as a controlled experiment on LLM data-extraction ability. The outcome, summarised in Table~\ref{tab:cont_llm_comparison}, is that the choice of model and input modality dominates the result. On the same papers, Gemma in text mode produced \emph{zero} usable rows, repeatedly reporting that no useful data were present, whereas Gemma in image mode --- reading tables and figures as pixels rather than text --- recovered a small amount, and DeepSeek extracted by far the most. After deduplication the four sources together contribute roughly $300$ unique polymer--molecule rows that are absent from the original PDCC.
+The four LLMs were not all applied in the same way, and this asymmetry is itself informative. Two of them processed the \emph{entire} corpus and therefore constitute a genuine like-for-like comparison: DeepSeek analysed all of the roughly $2{,}200$ papers from their extracted text, and the open-weight Gemma model analysed the same papers under two input modalities --- the PDF rendered as text and the PDF rendered as page images. The other two models served as targeted validation layers rather than full-corpus extractors. Kimi re-analysed a selected subset of roughly $130$ papers --- those that DeepSeek had already found to contain complete, data-rich measurements --- so that the agreement between two independent models could be quantified on the records that matter most. Claude Opus was used differently still: working through its web interface, a small set of just eight papers was reviewed \emph{by hand}, namely those that DeepSeek had flagged as reporting \emph{ranges} of pH, concentration, or capacity rather than single values. This manual pass resolved those ranges, corrected mis-assigned chemical structures, and handled composite polymers that the automated resolution could not.
+
+The like-for-like comparison between the two full-corpus models, summarised in Table~\ref{tab:cont_llm_comparison}, points to input modality and raw model capability rather than prompt design as the dominant factor. On exactly the same papers, Gemma in text mode produced \emph{zero} usable rows, repeatedly reporting that no useful data were present, whereas Gemma in image mode --- reading tables and figures as pixels rather than text --- recovered a meaningful amount (around forty rows before deduplication), and DeepSeek extracted by far the most. After the full resolution-and-deduplication pipeline, the four sources together contribute roughly $300$ unique polymer--molecule rows that are absent from the original PDCC.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Cross-model comparison of LLM data extraction on an identical corpus of open-access papers. Counts are reported after chemical-structure resolution and global deduplication on the (polymer, drug) pair, i.e. the number of \emph{unique} pairs each source contributes to the augmentation set. Full per-model extraction logs and the raw, pre-deduplication counts are documented in the project repositories \cite{repo, repo_scraper}.}
+	\caption{Contribution of each model to the final augmentation set. ``Rows contributed'' are counted after chemical-structure resolution and global deduplication on the (polymer, drug) pair; the deduplication priority $\text{Opus} > \text{DeepSeek} > \text{Kimi} > \text{Gemma}$ thins the lower-priority sources, so these figures understate the raw extraction yield (Gemma in image mode, for instance, produced about $40$ rows before deduplication). Only DeepSeek and Gemma processed the full corpus; Kimi re-analysed a data-rich subset, and Claude Opus was a manual review of eight range-reporting papers. Full per-model logs and raw counts are in the repositories \cite{repo, repo_scraper}.}
 	\label{tab:cont_llm_comparison}
-	\begin{tabular}{llc}
+	\begin{tabular}{lllc}
 		\toprule
-		\textbf{LLM source} & \textbf{Input modality} & \textbf{Unique rows contributed} \\
+		\textbf{Model} & \textbf{Mode} & \textbf{Scope} & \textbf{Rows contributed} \\
 		\midrule
-		DeepSeek           & PDF $\rightarrow$ text  & 239 \\
-		Claude Opus        & PDF $\rightarrow$ text  & 49  \\
-		Kimi               & PDF $\rightarrow$ text  & 8   \\
-		Gemma              & PDF $\rightarrow$ image & 1   \\
-		Gemma              & PDF $\rightarrow$ text  & 0   \\
+		DeepSeek    & text         & full corpus ($\sim$2{,}200)  & 239 \\
+		Claude Opus & manual / web & 8 papers (ranges)            & 49  \\
+		Kimi        & text         & data-rich subset ($\sim$130) & 8   \\
+		Gemma       & image        & full corpus ($\sim$2{,}200)  & 1   \\
+		Gemma       & text         & full corpus ($\sim$2{,}200)  & 0   \\
 		\midrule
-		\textbf{Combined (deduplicated)} &        & $\approx 297$ \\
+		\multicolumn{3}{l}{\textbf{Combined (deduplicated)}} & $\approx 297$ \\
 		\bottomrule
 	\end{tabular}
 \end{table}
