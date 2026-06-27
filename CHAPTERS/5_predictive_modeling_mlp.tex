@@ -46,9 +46,10 @@ The interpolation-based data augmentation provided measurable benefits. The conf
 
 These results were obtained on the augmented dataset; performance on the original, unaugmented data would be expected to be lower.
 
+\makesavenoteenv{table}
 \begin{table}[htbp]
 	\centering
-	\caption[LOOCV results across MLP hyperparameter configurations.]{LOOCV results across MLP hyperparameter configurations. Top 10 experiments ranked by Q².\footnote{The complete configuration for each experiment is documented in the corresponding folder under RESULTS/mlp\_experiments/.}}
+	\caption[LOOCV results across MLP hyperparameter configurations.]{LOOCV results across MLP hyperparameter configurations. Top 10 experiments ranked by Q².\footnote{\raggedright The complete configuration for each experiment is documented in the github repo \cite{repo} under RESULTS/mlp\_experiments/.}}
 	\label{tab:q2_leaderboard}
 	\begin{tabular}{lccc}
 		\toprule
@@ -67,6 +68,7 @@ These results were obtained on the augmented dataset; performance on the origina
 		\bottomrule
 	\end{tabular}
 \end{table}
+% \savesavenotenv{table}
 
 \begin{figure}[htbp]
 	\centering
@@ -89,7 +91,7 @@ To gain insight into the structure of the PDCC dataset and identify natural grou
 
 The dendrogram (Figure~\ref{fig:ahc_dendrogram}) displays the full hierarchical merging process. Each leaf at the bottom represents an individual polymer-molecule observation, while the root at the top represents the single cluster containing all observations. The y-axis shows the linkage distance at which merges occur: small distances indicate that very similar observations are being combined, while large jumps in distance signal the formation of broader groups. By cutting the dendrogram at different heights, one can obtain different numbers of clusters depending on the desired granularity.
 
-The PCA projection (Figure~\ref{fig:ahc_cluster_pca}) provides a complementary two-dimensional view of the clustering results. PCA reduces the high-dimensional feature space to the two principal components that capture the most variance in the data. Analysis of the PCA loadings reveals the chemical features driving each component. The first principal component (PC1, x-axis) is dominated by drug molecular properties, with drug molecular weight contributing 88.3\% to this axis, followed by drug solubility descriptors (SMR VSA5, 27.4\%) and topological surface area (26.6\%). The second principal component (PC2, y-axis) is primarily driven by polymer structural features, with polymer sidechain molecular weight contributing 71.6\% and full polymer molecular weight contributing 45.9\%. Notably, the experimental variables concentration and pH contribute minimally to both components (combined <0.15), indicating that the natural groupings in the data arise from chemical structure rather than experimental conditions.
+The PCA projection (Figure~\ref{fig:ahc_cluster_pca}) provides a complementary two-dimensional view of the clustering results. PCA reduces the high-dimensional feature space to the two principal components that capture the most variance in the data. Analysis of the PCA loadings reveals the chemical features driving each component. The first principal component (PC1, x-axis) is dominated by drug molecular properties, with drug molecular weight contributing 88.3\% to this axis, followed by drug solubility descriptors (SMR VSA5, 27.4\%) and topological surface area (26.6\%). The second principal component (PC2, y-axis) is primarily driven by polymer structural features, with polymer sidechain molecular weight contributing 71.6\% and full polymer molecular weight contributing 45.9\%. Notably, the experimental variables concentration and pH contribute minimally to both components (combined <0.15), indicating that the natural groupings in the data arise from chemical structure rather than experimental conditions.\footnote{\raggedright These results are available in the github repo \cite{repo} under \texttt{RESULTS/ahc\_clustering/pca\_top\_drivers\_PC1.csv} and \texttt{RESULTS/ahc\_clustering/pca\_top\_drivers\_PC2.csv}}
 
 \begin{figure}[htbp]
 	\centering
