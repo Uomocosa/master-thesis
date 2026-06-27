@@ -1,0 +1,114 @@
+\chapter{Continuation: Automated Literature Mining and Model Re-evaluation}
+\label{ch:continuation}
+
+The previous chapters identified data scarcity as the single most limiting factor of this work: the hand-curated Polymer Drug Concentration Capacity (PDCC) dataset contains only a few hundred observations spread across roughly seventy distinct polymer--molecule pairs, and this scarcity was repeatedly cited as the reason predictive generalisation remained difficult. This chapter describes the natural continuation of the thesis, undertaken to confront that limitation directly. It pursues two goals. The first is the creation and implementation of \emph{paper-scraper}, an automated, agent-based pipeline that mines open-access scientific literature with Large Language Models (LLMs) to extract new polymer--molecule--capacity measurements at scale. The second is the re-use of the predictive model developed earlier --- the same Multi-Layer Perceptron architecture and the same feature pipeline, left deliberately unchanged --- now trained on the enlarged dataset, in order to answer a concrete question: \emph{does automatically mined literature data improve a neural-network predictor of adsorption capacity, and if so, which LLM source contributes the most?}
+
+The chapter is intentionally self-contained. Section~\ref{sec:cont_scraper} presents the scraping pipeline and a controlled comparison of the LLMs used to populate it. Section~\ref{sec:cont_reuse} describes how the existing model was re-evaluated on the new data under two stricter protocols than those of Chapter~\ref{sec:predictive_chapter}, and Section~\ref{sec:cont_discussion} discusses what the outcome --- a deliberately honest, and largely cautionary, result --- implies for the broader thesis.
+
+\section{The Paper-Scraper Pipeline}
+\label{sec:cont_scraper}
+
+The manual curation that produced the PDCC dataset is accurate but slow, and it scales poorly with the size of the literature. To expand the dataset without a proportional increase in human effort, a fully automated acquisition pipeline was designed and implemented as a dedicated software project \cite{repo_scraper}. The pipeline treats LLMs as information-extraction agents and proceeds in five stages.
+
+\subsection{Retrieval and Extraction}
+\label{sec:cont_retrieval}
+
+In the first stage, the bibliographic references of a small set of seed papers are parsed with Grobid \cite{grobid}, a machine-learning service that extracts structured metadata from scholarly PDFs, producing a list of candidate Digital Object Identifiers (DOIs). In the second stage, these candidates are expanded and retrieved through the OpenAlex catalogue \cite{openalex}, an open index of scholarly works, downloading roughly $2{,}200$ open-access papers on pharmaceutical adsorption. In the third stage, each paper is submitted to an LLM together with a structured prompt that asks it to return, for every experiment reported in the text, the same five fields that define the PDCC dataset: the polymer, the drug, the solution pH, the initial concentration, and the adsorption capacity. This step produced more than $33{,}000$ candidate rows, which automatic quality filtering then reduced to the subset of rows in which all five fields are present and mutually consistent.
+
+\subsection{Chemical-Structure Resolution}
+\label{sec:cont_resolution}
+
+The extracted measurements are expressed in free-text chemical names, whereas the feature pipeline of Chapter~\ref{sec:predictive_chapter} requires machine-readable line notations. The fourth stage resolves these names. Drug names are converted to SMILES strings deterministically, by combining a curated dictionary, queries to the PubChem database \cite{pubchem}, and a small set of regular-expression patterns for metal ions; no AI is used at this point, so that every successful resolution is independently verifiable. Polymer names cannot be resolved this way, because standard chemical databases do not store repeating-unit P-SMILES. They are instead resolved by a web-searching LLM agent that consults PubChem, encyclopaedic, and polymer-specific sources, with each paper handled in an isolated session so that the quality of the last paper analysed is no worse than that of the first. In the fifth and final stage, the resolved rows are deduplicated globally on the (polymer P-SMILES, drug SMILES) pair, so that the resulting augmentation set contains no repeated chemical pairs and can be combined freely with the original PDCC.
+
+\subsection{A Controlled Comparison of LLM Extractors}
+\label{sec:cont_comparison}
+
+A distinctive feature of the implementation is that every paper was analysed independently by four different LLMs --- DeepSeek, Kimi, Gemma, and Claude Opus --- and, for the open-weight Gemma model, under two input modalities: the PDF rendered as text and the PDF rendered as page images. Because all models were given an identical corpus, the extraction step doubles as a controlled experiment on LLM data-extraction ability. The outcome, summarised in Table~\ref{tab:cont_llm_comparison}, is that the choice of model and input modality dominates the result. On the same papers, Gemma in text mode produced \emph{zero} usable rows, repeatedly reporting that no useful data were present, whereas Gemma in image mode --- reading tables and figures as pixels rather than text --- recovered a small amount, and DeepSeek extracted by far the most. After deduplication the four sources together contribute roughly $300$ unique polymer--molecule rows that are absent from the original PDCC.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Cross-model comparison of LLM data extraction on an identical corpus of open-access papers. Counts are reported after chemical-structure resolution and global deduplication on the (polymer, drug) pair, i.e. the number of \emph{unique} pairs each source contributes to the augmentation set. Full per-model extraction logs and the raw, pre-deduplication counts are documented in the project repositories \cite{repo, repo_scraper}.}
+	\label{tab:cont_llm_comparison}
+	\begin{tabular}{llc}
+		\toprule
+		\textbf{LLM source} & \textbf{Input modality} & \textbf{Unique rows contributed} \\
+		\midrule
+		DeepSeek           & PDF $\rightarrow$ text  & 239 \\
+		Claude Opus        & PDF $\rightarrow$ text  & 49  \\
+		Kimi               & PDF $\rightarrow$ text  & 8   \\
+		Gemma              & PDF $\rightarrow$ image & 1   \\
+		Gemma              & PDF $\rightarrow$ text  & 0   \\
+		\midrule
+		\textbf{Combined (deduplicated)} &        & $\approx 297$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+This comparison is itself a contribution: it provides direct evidence that, for structured-data extraction from scientific PDFs, model capability and input modality matter at least as much as prompt design, and that a single under-performing model can silently yield nothing on a corpus from which a stronger model extracts hundreds of usable records.
+
+\section{Re-using the Predictive Model with the New Data}
+\label{sec:cont_reuse}
+
+With the augmentation set in hand, the predictive model of Chapter~\ref{sec:predictive_chapter} was re-used without modification. The same Multi-Layer Perceptron architectures (hidden layers $16$--$8$--$4$--$4$--$4$, $32$--$16$--$8$--$4$--$4$, and $64$--$32$--$16$--$8$--$4$), the same SoftPlus output, the same scalers, and the same RDKit/Polymetrix/tblite feature vector were applied; the only change was the training data, which now consisted of the original PDCC optionally augmented with the LLM-scraped rows. This isolation is deliberate: any change in performance can be attributed to the data rather than to the model.
+
+Evaluating whether the new data helps, however, requires honest evaluation protocols. The Leave-One-Out Cross-Validation (LOOCV) score of $Q^2 = 0.984$ reported in Chapter~\ref{sec:predictive_chapter} is an optimistic figure, because LOOCV removes a single observation at a time and therefore almost always leaves other concentration points of the \emph{same} polymer--molecule pair in the training set. It measures interpolation along a partly observed adsorption curve, not extrapolation to a pair never seen before. To test the harder, and more useful, generalisation question, the model was re-evaluated under two stricter paradigms.
+
+\subsection{Paradigm 1 --- Grouped Cross-Validation}
+\label{sec:cont_grouped}
+
+In grouped cross-validation the folds are defined by the unique (polymer, drug) groups rather than by individual rows, so that an entire pair is held out at once and the model never sees any concentration point belonging to a test pair during training. This removes the interpolation shortcut that inflates the LOOCV score. Under this protocol the original PDCC yields a $Q^2$ of only $-0.004$ for the best architecture, with the larger networks performing slightly worse. A $Q^2$ near zero means that, on a genuinely unseen pair, the model is no better than predicting the mean training capacity. Augmenting the training set with the LLM-scraped rows did not repair this: every augmented configuration remained at or below the original baseline under grouped cross-validation.
+
+\subsection{Paradigm 2 --- Fixed-Test Augmentation Study}
+\label{sec:cont_fixedtest}
+
+The second paradigm isolates the contribution of the scraped data directly. The original PDCC is split once, by polymer--molecule groups, into a fixed training portion ($80\%$ of groups) and a fixed test portion ($20\%$ of groups). Each experiment then trains on the original training portion \emph{plus} an optional subset of LLM-scraped data and is evaluated on the same held-out test groups, so that all augmentation strategies are compared on identical ground. Crucially, any scraped row whose chemistry resolves to a test-set pair is removed before training, eliminating data leakage. Because the test set is small (between $18$ and $51$ rows depending on the split), each experiment was repeated over several random seeds and the mean and standard deviation of $Q^2$ are reported.
+
+The result, summarised in Table~\ref{tab:cont_fixed_test}, is sobering. Trained on the original PDCC alone the model cannot extrapolate: the baseline $Q^2$ is negative for every architecture. More importantly, \emph{no} augmentation strategy produced a robustly positive $Q^2$. The configurations with positive mean $Q^2$ --- for example DeepSeek$+$Opus at $+0.023$ --- were all measured on only three seeds, and whenever a promising configuration was re-tested on additional seeds the apparent gain disappeared.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Fixed-test augmentation study. Mean $Q^2$ (with standard deviation) on a fixed held-out set of unseen polymer--molecule pairs, for the baseline (original PDCC only) and representative augmentation strategies. Positive means appear only in the three-seed runs; the eight-seed runs are uniformly negative. The complete $48$-row leaderboard across all phases, architectures and seeds is in the repository \cite{repo} under \texttt{RESULTS/fixed\_test\_experiments/}.}
+	\label{tab:cont_fixed_test}
+	\begin{tabular}{llcc}
+		\toprule
+		\textbf{Training data}      & \textbf{Architecture} & \textbf{$Q^2$ (mean $\pm$ std)} & \textbf{Seeds} \\
+		\midrule
+		Original PDCC (baseline)    & hd\_32\_16\_8\_4\_4  & $-0.038 \pm 0.20$ & 8 \\
+		Original PDCC (baseline)    & hd\_16\_8\_4\_4\_4   & $-0.069 \pm 0.23$ & 8 \\
+		$+$ DeepSeek                & hd\_16\_8\_4\_4\_4   & $-0.121 \pm 0.20$ & 8 \\
+		$+$ DeepSeek $+$ Opus       & hd\_64\_32\_16\_8\_4 & $+0.023 \pm 0.09$ & 3 \\
+		$+$ DeepSeek $+$ Kimi       & hd\_16\_8\_4\_4\_4   & $+0.019 \pm 0.07$ & 3 \\
+		$+$ DeepSeek $+$ Gemma      & hd\_64\_32\_16\_8\_4 & $-0.064 \pm 0.30$ & 8 \\
+		$+$ all four sources        & hd\_64\_32\_16\_8\_4 & $-0.090 \pm 0.23$ & 8 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The clearest illustration is the configuration that initially appeared best. DeepSeek$+$Gemma with the largest architecture reached a mean $Q^2$ of $+0.220$ on the three original seeds and looked like a genuine improvement over the baseline. When five further seeds were added, however, all five gave negative $Q^2$, and the eight-seed mean fell to $-0.064$. As Table~\ref{tab:cont_seed_artifact} shows, the per-seed $Q^2$ for this single, fixed configuration ranges from $+0.367$ to $-0.532$ purely according to which polymer--molecule groups happen to land in the test split. The initial positive result was a statistical artifact of three favourable splits, not a property of the augmentation strategy.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Per-seed $Q^2$ for the single configuration DeepSeek$+$Gemma / \texttt{hd\_64\_32\_16\_8\_4}. The first three seeds were the original run (mean $+0.220$); the lower five were added for validation. The eight-seed mean is $-0.064$.}
+	\label{tab:cont_seed_artifact}
+	\begin{tabular}{ccl}
+		\toprule
+		\textbf{Seed} & \textbf{$Q^2$} & \textbf{Run} \\
+		\midrule
+		42  & $+0.367$ & original \\
+		123 & $+0.163$ & original \\
+		7   & $+0.129$ & original \\
+		0   & $-0.532$ & validation \\
+		1   & $-0.057$ & validation \\
+		2   & $-0.411$ & validation \\
+		5   & $-0.076$ & validation \\
+		10  & $-0.099$ & validation \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{Discussion}
+\label{sec:cont_discussion}
+
+Three conclusions follow from this continuation. First, the predictive model interpolates well (LOOCV $Q^2 = 0.984$) but does not extrapolate to unseen polymer--molecule pairs: both the grouped and the fixed-test protocols give $Q^2 \le 0$ on the original data. Second, augmenting the training set with LLM-scraped literature data does not robustly close this gap; the apparent improvements lie within the noise induced by the small number of test groups, and they vanish under additional seeds. Third, among the LLM sources DeepSeek is consistently the most useful --- it is the largest and most chemically diverse contributor, and every configuration that produced even a transient positive $Q^2$ included it --- whereas the smaller sources add little novel chemistry once duplicates are removed.
+
+The decisive limitation, therefore, is not the volume of scraped rows but the number of \emph{distinct} polymer--molecule pairs available for testing. With only about seventy groups in the PDCC, roughly fourteen fall into each test split, far too few for a stable extrapolation estimate; the variance of $Q^2$ across seeds dwarfs any effect of the augmentation. This is a genuinely useful negative result for the thesis: it shows that the paper-scraper succeeds at its narrow task of harvesting and structuring literature data, but that more rows per pair cannot, on their own, buy generalisation. The prerequisite for a meaningful extrapolation benchmark is greater diversity of hand-curated polymer--molecule pairs --- a target the automated pipeline can help reach, but only once paired with the careful manual validation that guarantees data quality.

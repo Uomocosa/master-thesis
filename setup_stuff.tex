@@ -111,3 +111,13 @@
 % --------------------------------------------------------
 % code listing
 \usepackage{listings}
+
+% --------------------------------------------------------
+% revision highlighting (changes w.r.t. the previously reviewed draft)
+% Wrap changed/added inline text in \new{...} to mark it for the reviewer.
+% NOTE: soul's \hl breaks if it wraps \cite, \footnote, \ref or math;
+%       keep those OUTSIDE the \new{...} span.
+\usepackage{xcolor}
+\usepackage{soul}
+\sethlcolor{yellow}
+\newcommand{\new}[1]{\hl{#1}}
