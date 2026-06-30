@@ -1,5 +1,5 @@
 \chapter{Predictive Modeling of Adsorption Capacity}
-\label{sec:predictive_chapter}
+\label{chap5}
 
 Having established the ability to generate novel polymer structures, this chapter addresses the complementary challenge of predicting their effectiveness. The central predictive task is to estimate the adsorption capacity of a given polymer-molecule pair under specified environmental conditions.
 
@@ -38,7 +38,7 @@ The dataset augmentation strategies described in Chapter 4 (interpolation and or
 
 The hyperparameter optimization process evaluated a wide range of configurations using Leave-One-Out Cross-Validation. The results provide insight into the model's predictive capability under realistic data constraints.
 
-Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of 0.984 using LOOCV evaluation. This result indicates that the model explains approximately 98.4\% of the variance in the adsorption capacity. \new{This figure, however, reflects interpolation along partly observed adsorption curves rather than extrapolation to entirely new polymer--molecule pairs; the continuation chapter re--evaluates the same model under stricter grouped and fixed--test protocols and shows that this generalisation does not hold.}
+Among the configurations tested, the optimal hyperparameters were identified based on the highest Q² score achieved during cross-validation. The best-performing configuration achieved a Q² score of 0.984 using LOOCV evaluation. This result indicates that the model explains approximately 98.4\% of the variance in the adsorption capacity. This figure, however, reflects interpolation along partly observed adsorption curves rather than extrapolation to entirely new polymer--molecule pairs. Chapter \ref{chap6} re-evaluates the same model under stricter grouped and fixed-test protocols, demonstrating that this apparent generalization does not hold.
 
 The distribution of Q² scores across different hyperparameter configurations revealed several important findings. Configurations that included the SoftPlus output activation consistently outperformed those using a linear output, confirming the importance of constraining predictions to the physically meaningful non-negative range. The choice of feature subset had a moderate impact on performance, with configurations using the full feature set (including both Polymetrix descriptors and Morgan fingerprints) performing better than those using reduced feature sets.
 
@@ -118,7 +118,7 @@ Despite the encouraging results, several limitations must be acknowledged. The m
 
 The second limitation concerns the representativeness of the training data. The scraped literature reports successful adsorption experiments, potentially introducing publication bias. Polymer-molecule pairs that did not exhibit significant adsorption may be underrepresented or absent from the dataset. A robust predictive model requires data on both successes and failures to learn the boundary between effective and ineffective adsorbents.
 
-The third limitation relates to feature quality. As discussed in Chapter 4, polymer features are computed from capped monomers rather than full polymer chains. This approximation neglects higher-order polymer properties such as chain length distribution, cross-linking density, and three-dimensional conformation, all of which influence adsorption behavior.
+The third limitation relates to feature quality. As discussed in Chapter \ref{chap4}, polymer features are computed from capped monomers rather than full polymer chains. This approximation neglects higher-order polymer properties such as chain length distribution, cross-linking density, and three-dimensional conformation, all of which influence adsorption behavior.
 
 \section{Chemical Filtering of Candidate Polymers}
 \label{sec:filtering_section}
