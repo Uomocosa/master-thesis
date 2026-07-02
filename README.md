@@ -4,14 +4,52 @@
 
 This is a really simple an brief summary of each chapter in my thesis.
 
-To build the pdf locally run the following commands:
-1. `pdflatex -output-directory=build main.tex`
-2. `bibtex build/main`
-3. `pdflatex -output-directory=build main.tex`
-4. `pdflatex -output-directory=build main.tex`
+## Building the PDF
 
-All in one:
-`pdflatex -output-directory=build main.tex; bibtex build/main; pdflatex -output-directory=build main.tex; pdflatex -output-directory=build main.tex`
+The thesis compiles to a PDF/A-1b document with TeX Live. You don't need a
+local LaTeX install or admin rights — the build runs inside a Podman
+container using the same `Containerfile` the GitHub CI uses.
+
+### Prerequisites
+
+- **Podman** (daemonless, no admin required):
+  Download from [podman.io](https://podman.io/downloads)
+- Windows/macOS: create and start the Podman VM (one-time):
+  ```
+  podman machine init
+  podman machine start
+  ```
+- Linux: install via your package manager (Podman runs natively, no VM needed).
+
+### First-time setup
+
+Build the image from the `Containerfile` (once):
+```
+podman build -t thesis-builder .
+```
+
+### Recompile
+
+Run the build script:
+```
+bash scripts/build-pdf.sh
+```
+
+Or, manually:
+```
+podman run --rm -v "$(pwd):/workdir" thesis-builder
+```
+
+Output: `build/main.pdf` (gitignored, won't pollute the repo).
+
+### Native LaTeX (alternative)
+
+If you have TeX Live installed locally instead of using containers:
+```
+pdflatex -output-directory=build main.tex
+pdflatex -output-directory=build main.tex
+```
+(Two passes suffice — the bibliography is hand-written inline, so no `bibtex` step is needed.)
 
 # Introduction
 

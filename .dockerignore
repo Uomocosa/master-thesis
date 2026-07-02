@@ -1,0 +1,7 @@
+build/
+RESULTS/
+FIGURES/
+images_into_ascii/
+.git/
+*.log
+nul

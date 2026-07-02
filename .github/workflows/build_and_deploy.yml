@@ -23,13 +23,13 @@ jobs:
       - name: Prepare files for deployment
         run: |
           mkdir public
-          # Move the compiled PDF into the new folder
           cp main.pdf public/
-          # Create a simple index.html that automatically redirects to the PDF
           echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=main.pdf"></head><body>Redirecting to PDF...</body></html>' > public/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
+        timeout-minutes: 10
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          force_orphan: true
