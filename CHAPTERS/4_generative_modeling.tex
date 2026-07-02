@@ -16,7 +16,7 @@ The training procedure follows the standard language modeling objective: given a
 
 The hyperparameters of the model include the number of transformer layers (determining the model's capacity to learn complex dependencies), the number of attention heads per layer, the embedding dimension, and the context length (the maximum sequence length the model can handle). These were tuned through preliminary experiments to balance model expressiveness with computational efficiency.
 
-Training was performed on two datasets. The primary training set for polymer generation was the PI1M dataset, a comprehensive collection of synthetic polymer structures represented in P-SMILES notation. For comparison, a secondary model was trained on the "ZINC\_base" dataset to evaluate the generation of standard molecular SMILES strings.
+Training was performed on two datasets. The primary training set for polymer generation was the PI1M dataset~\cite{pi1m}, a comprehensive collection of synthetic polymer structures represented in P-SMILES notation. For comparison, a secondary model was trained on the "ZINC\_base" dataset~\cite{zinc15, lim2018cvae} to evaluate the generation of standard molecular SMILES strings.
 
 \section{Generating Valid Synthetic Polymer SMILES (P-SMILES)}
 \label{sec:generating_psmiles}
