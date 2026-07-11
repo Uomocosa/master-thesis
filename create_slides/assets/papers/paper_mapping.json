@@ -1,0 +1,116 @@
+{
+  "papers": [
+    {
+      "paper_title": "2-Oxazoline-Based Polymer for Pharmaceutical Products Adsorption in Aqueous Solutions",
+      "paper_pdf": "C:/Users/SamueleMaggiori/[Tesi] (Obsidian Vault)/Papers/2‐Oxazoline‐Based Polymer for Pharmaceutical Products Adsorption in Aqueous (1).pdf",
+      "paper_description": "Synthesis (via CROP) and testing of polyPhOx, a novel 2-oxazoline-based polymer with phenyl groups, designed to capture pharmaceutical contaminants from water through pi-pi stacking and electrostatic interactions. Tested against six drugs (aspirin, ibuprofen, metoclopramide, pyramidone, oestradiol, indomethacin); best capacity 56.67 mg/g for oestradiol, the most hydrophobic compound (adsorption correlates with log P). Reusable over 10 cycles, validated on real Albano Lake water. Strong slide-1 candidate: a concrete 'molecular sponge' paper with good numbers.",
+      "images": [
+        {
+          "path": "create_slides/assets/papers/oxazoline_capacity_indomethacin_oestradiol_ibuprofen.png",
+          "image_description": "Fig (a): adsorption capacity (mg/g polymer) vs concentration (mg/L) for indomethacin, oestradiol and ibuprofen, with linear fits (R^2 = 0.94-0.99); oestradiol reaches ~56 mg/g at 200 mg/L. The paper's headline result. NOTE: per user decision, this chart fits the 'data interpolation' part of the talk, not slide 1."
+        },
+        {
+          "path": "create_slides/assets/papers/oxazoline_capacity_aspirin_pyramidone_metoclopramide.png",
+          "image_description": "Fig (b): companion panel — adsorption capacity vs concentration for the three less hydrophobic drugs (aspirin, pyramidone, metoclopramide), much lower capacities (<4 mg/g). Useful to show selectivity: hydrophobic pollutants adsorb far better."
+        }
+      ]
+    },
+    {
+      "paper_title": "Single and dual polymeric sponges for emerging pollutants removal",
+      "paper_pdf": "C:/Users/SamueleMaggiori/[Tesi] (Obsidian Vault)/Papers/Single and dual polymeric sponges for emerging pollutants removal.pdf",
+      "paper_description": "European Polymer Journal (2022). Macroporous polymeric cryogels ('sponges') made by cryogelation for removing emerging organic contaminants: C-megl (positive, meglumine-based), C-mA (negative, methacrylic acid), C-lys (lysine), C-ph (neutral reference), plus a dual C-megl+C-mA system for simultaneous removal of oppositely charged pollutants. Removes antibiotics, piroxicam, moxidectin, pesticide 2,4-D and dyes via electrostatic interaction; fast kinetics (75% removed in 15 min, pseudo-second-order), pH-responsive regeneration and reuse. The literal 'polymeric sponge' paper — ideal for slide 1.",
+      "images": [
+        {
+          "path": "create_slides/assets/papers/cryogel_dual_sponge_photo_dye_removal.png",
+          "image_description": "REAL PHOTO of the dual sponge: magenta (C-mA half, loaded with methylene violet) + yellow (C-megl half, loaded with thymol blue) cryogel sitting in a beaker, next to a bar chart showing ~98% M-Viol and ~95% T-Blue simultaneous removal. The single most slide-friendly image of the paper — shows what a 'molecular sponge' physically looks like."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_dual_sponge_cryogelation_scheme.png",
+          "image_description": "Graphical scheme of dual-sponge fabrication: reactant A -> 1st cryogelation -> add reactant B -> 2nd cryogelation -> defrosting -> final two-layer (blue/green) dual cryogel cylinder, with monomer structures. Great intro/explanation visual for how polymeric sponges are made."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_target_pollutants_structures.png",
+          "image_description": "Panel of target pollutant molecular structures grouped by class: antibiotics (doxycycline, ampicillin, lomefloxacin), antiparasitic (moxidectin), antifungal (fluconazole), NSAID (piroxicam), dyes (thymol blue, methylene violet), pesticide (2,4-D). Useful to show the diversity of target molecules."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_cmegl_kinetics_piroxicam.png",
+          "image_description": "Fig (a): C-megl adsorption kinetics for piroxicam (anti-inflammatory) at 25/50/100 ppm — mg/g vs time (min), plateau ~94 mg/g at 100 ppm within ~2 h. NOTE: per user decision, kinetics charts like this fit the 'data interpolation' part of the talk, not slide 1."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_cmegl_kinetics_moxidectin.png",
+          "image_description": "Fig (b): C-megl adsorption kinetics for moxidectin (anti-parasite) at 25/50/100 ppm, plateau ~61 mg/g at 100 ppm."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_cmegl_kinetics_24d_pesticide.png",
+          "image_description": "Fig (c): C-megl adsorption kinetics for the pesticide 2,4-D at 25/50/100 ppm, plateau ~91 mg/g at 100 ppm — the paper highlights this as outstanding vs literature."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_cmegl_kinetics_thymol_blue.png",
+          "image_description": "Fig (d): C-megl adsorption kinetics for the dye thymol blue at 25/50/100 ppm, plateau ~94 mg/g at 100 ppm."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_pseudo_first_order_fit_a.png",
+          "image_description": "Kinetic model fit (a): pseudo-first-order plot ln(Qe-Qt) vs time with linear fits for three concentrations. Technical/supporting figure, probably too detailed for the discussion slides."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_pseudo_second_order_fit_b.png",
+          "image_description": "Kinetic model fit (b): pseudo-second-order plot t/Qt vs time, near-perfect linear fits — supports the chemisorption claim. Technical/supporting figure."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_pseudo_first_order_fit_c.png",
+          "image_description": "Kinetic model fit (c): second pseudo-first-order panel for another pollutant set. Technical/supporting figure."
+        },
+        {
+          "path": "create_slides/assets/papers/cryogel_pseudo_second_order_fit_d.png",
+          "image_description": "Kinetic model fit (d): second pseudo-second-order panel. Technical/supporting figure."
+        }
+      ]
+    },
+    {
+      "paper_title": "Water purification using sponge like behaviour of poly(N-isopropylacrylamide) / magnetite composite gels",
+      "paper_pdf": "C:/Users/SamueleMaggiori/[Tesi] (Obsidian Vault)/Papers/Water purification using sponge like behaviour.pdf",
+      "paper_description": "pNIPA hydrogel loaded with magnetite (Fe3O4) nanoparticles acting as a 'sponge-like' adsorbent for heavy-metal ions (silver and copper) in water. Adsorption scales with magnetite content; isotherms fitted with Langmuir and Freundlich models; near-100% Ag(I) removal from real water samples at higher magnetite loadings. Good example of sponge-like polymer behaviour applied to inorganic (metal) pollutants rather than organics.",
+      "images": [
+        {
+          "path": "create_slides/assets/papers/pnipa_magnetite_silver_adsorbed_vs_magnetite_mass.png",
+          "image_description": "Fig 3: mass of silver adsorbed (mg) on 4% pNIPA/magnetite gel vs magnetite mass (g), saturating curve up to ~0.5 mg."
+        },
+        {
+          "path": "create_slides/assets/papers/pnipa_magnetite_qe_vs_reciprocal_magnetite_mass.png",
+          "image_description": "Fig 4: silver adsorption capacity Qe (mg/g) vs reciprocal magnetite mass, comparing bare magnetite vs pNIPA/magnetite composite, with error bars (up to ~14 mg/g)."
+        },
+        {
+          "path": "create_slides/assets/papers/pnipa_magnetite_langmuir_isotherm.png",
+          "image_description": "Fig 5A: Langmuir isotherm linearization (ce/Qe vs ce) for silver adsorption, with error bars. Technical/supporting figure."
+        },
+        {
+          "path": "create_slides/assets/papers/pnipa_magnetite_freundlich_isotherm.png",
+          "image_description": "Fig 5B: Freundlich isotherm linearization (log Qe vs log ce) for silver adsorption. Technical/supporting figure."
+        },
+        {
+          "path": "create_slides/assets/papers/pnipa_magnetite_removal_efficiency_ag_cu.png",
+          "image_description": "Fig 8: removal efficiency %R of Ag(I) and Cu(II) from a real water sample vs % magnetite in the pNIPA gel — Ag(I) reaches ~100% removal. Most presentation-friendly figure of this paper."
+        }
+      ]
+    },
+    {
+      "paper_title": "Machine Learning Models for Efficient Adsorption of Congo Red Dye",
+      "paper_pdf": "C:/Users/SamueleMaggiori/[Tesi] (Obsidian Vault)/Papers/Machine Learning Models for Efficient Adsorption of Congo Red Dye.pdf",
+      "paper_description": "Uses machine-learning models (ANN and SVR) to predict fixed-bed column adsorption of Congo Red dye, reproducing experimental breakthrough curves under varying flow rate, inlet concentration and bed height. Relevant as an ML-meets-adsorption precedent — closer to the thesis' predictive-modeling chapter than to slide 1's 'molecular sponge examples'.",
+      "images": [
+        {
+          "path": "create_slides/assets/papers/congo_red_ann_svr_breakthrough_flow_rates.png",
+          "image_description": "Fig 8: experimental vs ANN vs SVR breakthrough curves (Ct/C0 vs time) at 10/15/20 mL/h flow rates — models overlap experiment almost perfectly."
+        },
+        {
+          "path": "create_slides/assets/papers/congo_red_ann_svr_breakthrough_concentration.png",
+          "image_description": "Fig 9: same comparison at varying inlet concentration (300/525/700 mg/L)."
+        },
+        {
+          "path": "create_slides/assets/papers/congo_red_ann_svr_breakthrough_bed_height.png",
+          "image_description": "Fig 10: same comparison at varying bed height (0.3/0.6/0.9 cm)."
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,12 @@ requires-python = ">=3.12"
 dependencies = [
     "manim>=0.20.1",
     "python-pptx>=1.0.2",
+    "loguru>=0.7.2",
 ]
+
+[project.scripts]
+create-slide-1 = "create_slides.scripts.create_slide_1:main"
+create-all-slides = "create_slides.scripts.create_all_slides:main"
 
 [build-system]
 requires = ["hatchling"]

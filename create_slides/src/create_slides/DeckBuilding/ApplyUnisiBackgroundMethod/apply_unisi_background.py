@@ -1,0 +1,32 @@
+from pptx.dml.color import RGBColor
+from pptx.enum.shapes import MSO_CONNECTOR
+from pptx.slide import Slide as PptxSlide
+from pptx.util import Emu
+
+from create_slides.UnisiBackground import UnisiBackground
+
+
+def apply_unisi_background(pptx_slide: PptxSlide, background: UnisiBackground) -> None:
+    if background.banner_image is not None:
+        pptx_slide.shapes.add_picture(
+            str(background.banner_image),
+            Emu(background.banner_position[0]),
+            Emu(background.banner_position[1]),
+            Emu(background.banner_size[0]),
+            Emu(background.banner_size[1]),
+        )
+    pptx_slide.shapes.add_picture(
+        str(background.logo_image),
+        Emu(background.logo_position[0]),
+        Emu(background.logo_position[1]),
+        Emu(background.logo_size[0]),
+        Emu(background.logo_size[1]),
+    )
+
+    line = background.line_separator
+    x, y = line.position
+    connector = pptx_slide.shapes.add_connector(
+        MSO_CONNECTOR.STRAIGHT, Emu(x), Emu(y), Emu(x), Emu(y + line.length)
+    )
+    connector.line.color.rgb = RGBColor.from_string(line.color)
+    connector.line.width = Emu(line.weight)
