@@ -1,0 +1,11 @@
+{
+  "enabledPlugins": {
+    "pixi@opencode-skills": true,
+    "opencode-git-workflow@opencode-skills": true,
+    "lele-syntax-py@opencode-skills": true,
+    "opencode-create-skill@opencode-skills": true,
+    "plan-remove-dead-code-py@opencode-skills": true,
+    "opencode-create-agents@opencode-skills": true,
+    "opencode-create-commands@opencode-skills": true
+  }
+}
