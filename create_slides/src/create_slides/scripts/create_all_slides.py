@@ -3,7 +3,12 @@ from pathlib import Path
 from create_slides.DeckBuilding import build_full_deck
 from create_slides.Movie import Movie
 from create_slides.Slide import Slide
-from create_slides.UnisiBackground import UNISI_CONTENT_SLIDE
+from create_slides.UnisiBackground import (
+    UNISI_CONTENT_SLIDE,
+    UNISI_CONTENT_SLIDE_SKYLINE,
+)
+
+SLIDE_BACKGROUNDS = {4: UNISI_CONTENT_SLIDE_SKYLINE}
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 OUTPUT_PATH = REPO_ROOT / "SLIDES" / "thesis_discussion_deck.pptx"
@@ -74,9 +79,8 @@ SLIDES = [
         number=3,
         title="Raccolta Dati — Costruzione del Dataset PDCC",
         visual_bullets=[
-            "PDCC: Polymer, Drug/Molecola, Concentration, Capacity (+ pH)",
-            "Dati estratti manualmente da articoli pubblicati",
-            "Nessun dataset esistente: base necessaria per tutto il resto",
+            "PDCC: Polimero · Molecola · Concentrazione · Capacità · pH",
+            "Estratto a mano da articoli; nessun dataset preesistente",
         ],
         speech=(
             "Il primo lavoro è stato costruire il dataset stesso. Ho estratto dati di adsorbimento "
@@ -86,11 +90,20 @@ SLIDES = [
             "scopo, quindi questo lavoro di raccolta e cura dei dati è stato una base necessaria "
             "per tutto ciò che è venuto dopo."
         ),
-        todos=["Inserire un piccolo estratto di tabella PDCC come immagine."],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "pdcc_carousel.mp4",
+                poster_path=ANIMATIONS_DIR / "pdcc_carousel_poster.png",
+            ),
+        ],
+        todos=[
+            "Il carosello scorre le righe reali del dataset PDCC (parte al 1° click); "
+            "si avanza alla slide successiva quando si è finito di parlare."
+        ],
     ),
     Slide(
         number=4,
-        title="Scarsità di Dati — Un Vincolo Strutturale, Non un Fallimento",
+        title="Scarsità di Dati — Un Vincolo Strutturale",
         visual_bullets=[
             "\"Pochi studi pubblicati sulla capacità polimero-molecola\"",
             "Vincolo strutturale del settore, non un limite del progetto",
@@ -122,8 +135,19 @@ SLIDES = [
             "generativa e predittiva della mia pipeline lavora proprio su queste due "
             "rappresentazioni testuali."
         ),
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "smiles_reveal.mp4",
+                poster_path=ANIMATIONS_DIR / "smiles_reveal_poster.png",
+            ),
+            Movie(
+                video_path=ANIMATIONS_DIR / "psmiles_reveal.mp4",
+                poster_path=ANIMATIONS_DIR / "psmiles_reveal_poster.png",
+            ),
+        ],
         todos=[
-            "Generare con rdkit: aspirina + SMILES a sinistra, unità ripetuta + P-SMILES a destra."
+            "1° click → aspirina che si trasforma nel suo SMILES; 2° click → unità "
+            "ripetuta → P-SMILES; 3° click → slide successiva."
         ],
     ),
     Slide(
@@ -443,7 +467,13 @@ SLIDES = [
 
 
 def main() -> None:
-    build_full_deck([(slide, UNISI_CONTENT_SLIDE) for slide in SLIDES], OUTPUT_PATH)
+    build_full_deck(
+        [
+            (slide, SLIDE_BACKGROUNDS.get(slide.number, UNISI_CONTENT_SLIDE))
+            for slide in SLIDES
+        ],
+        OUTPUT_PATH,
+    )
 
 
 if __name__ == "__main__":

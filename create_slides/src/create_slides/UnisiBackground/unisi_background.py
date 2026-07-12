@@ -54,3 +54,20 @@ UNISI_CONTENT_SLIDE = UnisiBackground(
     body_position=(1739900, 1971675),
     body_size=(9394825, 4000500),
 )
+
+# Same content layout as UNISI_CONTENT_SLIDE, with the faint Siena skyline
+# line-art drawn as a full-width band across the lower half (behind the text).
+UNISI_CONTENT_SLIDE_SKYLINE = UnisiBackground(
+    template_path=CREATE_SLIDES_DIR / "unisi_skyline.pptx",
+    banner_image=ASSETS_DIR / "skyline_banner.png",
+    banner_position=(0, 2105025),
+    banner_size=(12192000, 4745038),
+    logo_image=ASSETS_DIR / "logo_small.png",
+    logo_position=(449263, 412750),
+    logo_size=(1127125, 1162050),
+    line_separator=UnisiLineTitleSeparation(position=(1730375, 331788), length=1323975),
+    title_position=(2019300, 542925),
+    title_size=(6934200, 954088),
+    body_position=(1739900, 1971675),
+    body_size=(9394825, 4000500),
+)

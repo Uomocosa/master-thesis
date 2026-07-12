@@ -1,4 +1,5 @@
 import av
+from pptx.oxml import parse_xml
 from pptx.oxml.ns import nsdecls, qn
 from pptx.slide import Slide as PptxSlide
 from pptx.util import Emu
@@ -79,8 +80,6 @@ def add_click_sequence_timing(
     pptx_slide: PptxSlide, movies: list[Movie], shape_ids: list[int]
 ) -> None:
     """One plain click per video plays it in order; the next click changes slide."""
-    from pptx.oxml import parse_xml
-
     click_pars = []
     next_id = 3
     for movie, spid in zip(movies, shape_ids):

@@ -92,7 +92,49 @@ something not already cataloged.
 
 The banner/background is a per-slide choice: each `create_slide_N.py` picks
 its own preset (`UNISI_CONTENT_SLIDE`, `UNISI_TITLE_SLIDE`, or `None`) —
-there is deliberately no global default.
+there is deliberately no global default. In `create_all_slides.py`, per-slide
+backgrounds come from a `SLIDE_BACKGROUNDS` map (slide number → preset,
+default `UNISI_CONTENT_SLIDE`); `build_full_deck` already takes
+`list[tuple[Slide, background]]`. A third preset `UNISI_CONTENT_SLIDE_SKYLINE`
+is the normal content layout **plus** the faint Siena skyline line-art
+(`assets/unisi/skyline_banner.png`) as a full-width band across the lower half
+— `apply_unisi_background` draws `banner_image` behind the text, so bullets
+stay readable over it (used by slide 4).
+
+## Videos / animations on slides
+
+`Slide.movies` (list of `Movie`, each a `video_path` + `poster_path`) embeds
+click-to-play MP4s. When a slide has movies, `add_unisi_slide` puts the
+bullets in the top ~30% and `add_slide_movies`
+(`DeckBuilding/AddSlideMoviesMethod/`) lays the 16:9 videos in a centered row
+below. It embeds each via python-pptx `add_movie` (with a `poster_frame_image`)
+**and injects a `<p:timing>` main sequence**: one on-click "play media" effect
+per video, so in **slideshow mode** a plain left click plays each video in
+order and only the *next* click (after the sequence is exhausted) advances the
+slide. python-pptx has no animation API, so this timing XML is built by hand
+(templates in `add_slide_movies.py`); verify it with PowerPoint COM
+(`Slide(n).TimeLine.MainSequence` — count == number of movies, all
+`trigger==1`). Videos play **only in slideshow mode**; edit view and the
+COM PNG render show the poster frame.
+
+The animations themselves are **manim** scenes in
+`src/create_slides/scenes/*.py` (white background; use `Text` with
+Calibri/Consolas — **not** LaTeX `Tex`, no LaTeX is installed). Molecule
+figures come from rdkit helpers in `AnimationAssets/`: `depict_polymers`
+(a CSV of P-SMILES → PNGs) and `depict_molecule` (one SMILES → PNG). Note a
+**P-SMILES is just a SMILES containing `*` dummy atoms** (attachment points,
+atomic number 0) — rdkit has no separate polymer object and draws them
+literally as `*`, so depiction is identical for molecules and repeat units.
+
+Regenerate every animation asset with **`uv run create-animation-assets`**
+(`scripts/create_animation_assets.py`): it renders the rdkit PNGs, runs each
+manim scene (`manim render -qh`), copies the MP4s into `assets/animations/`,
+and extracts a poster frame per video via `extract_poster`
+(`AnimationAssets/ExtractPosterMethod/`, uses `av`). `assets/animations/pdcc.csv`
+is a committed data snapshot (of the external PDCC dataset) that the PDCC
+carousel scene reads — it is not re-copied by the regen script. The `av`
+dependency (poster frames + media duration for the timing XML) is declared in
+`pyproject.toml`.
 
 ## Known gaps
 
@@ -110,7 +152,19 @@ uv run create-slide-1
 ```
 
 Close the target `.pptx` in PowerPoint first — python-pptx cannot overwrite
-a file that's open (you'll get a `PermissionError`).
+a file that's open (you'll get a `PermissionError`). If it's open, you can
+close just that presentation via COM from PowerShell (only when it has no
+unsaved changes):
+
+```powershell
+$pp = [Runtime.InteropServices.Marshal]::GetActiveObject('PowerPoint.Application')
+foreach ($p in @($pp.Presentations)) {
+  if ($p.FullName -like '*thesis_discussion_deck.pptx' -and $p.Saved) { $p.Close() }
+}
+```
+
+If the slide uses `movies`, regenerate the animation assets first with
+`uv run create-animation-assets` (see "Videos / animations on slides").
 
 ## Seeing what a slide looks like (ALWAYS do this after generating)
 

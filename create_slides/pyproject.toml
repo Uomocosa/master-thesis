@@ -9,11 +9,13 @@ dependencies = [
     "python-pptx>=1.0.2",
     "loguru>=0.7.2",
     "rdkit>=2026.3.3",
+    "av>=12.0.0",
 ]
 
 [project.scripts]
 create-slide-1 = "create_slides.scripts.create_slide_1:main"
 create-all-slides = "create_slides.scripts.create_all_slides:main"
+create-animation-assets = "create_slides.scripts.create_animation_assets:main"
 
 [build-system]
 requires = ["hatchling"]

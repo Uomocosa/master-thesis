@@ -69,3 +69,21 @@ embedded images with PyMuPDF, no install needed:
 `uv run --with pymupdf python <script>` opening the PDF via `fitz.open` and
 saving each `page.get_images(full=True)` xref as PNG (skip images smaller
 than ~150px; they're icons/logos). Then view the PNGs to pick the good ones.
+
+## Adding animations / videos to a slide
+
+Set `Slide(movies=[Movie(video_path=..., poster_path=...)])` with MP4s +
+poster PNGs under `create_slides/assets/animations/`. `add_slide_movies`
+embeds them as click-to-play videos and injects a `<p:timing>` click sequence:
+in **slideshow mode** a plain left click plays each video in order, and the
+next click (after the last video) advances the slide. Videos only play in
+slideshow — edit view and the COM PNG render show the poster frame, so
+verify playback by opening the deck and pressing F5, or check the sequence
+via PowerPoint COM (`Slide(n).TimeLine.MainSequence`).
+
+The videos are **manim** scenes in `src/create_slides/scenes/*.py` (molecule
+figures via the rdkit helpers in `AnimationAssets/`). After adding or editing
+a scene, regenerate all assets with `uv run create-animation-assets` (renders
+scenes, copies MP4s, extracts posters), then rebuild the deck. See
+`create_slides/CLAUDE.md` → "Videos / animations on slides" for the full
+pipeline.

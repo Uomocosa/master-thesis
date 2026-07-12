@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/SamueleMaggiori/master-thesis/create_slides/.manim_media/videos/smiles_reveal/1080p60/partial_movie_files/PsmilesRevealScene/4155443901_171887026_223132457.mp4'
+file 'file:C:/Users/SamueleMaggiori/master-thesis/create_slides/.manim_media/videos/smiles_reveal/1080p60/partial_movie_files/PsmilesRevealScene/736497086_1473857657_647942393.mp4'
+file 'file:C:/Users/SamueleMaggiori/master-thesis/create_slides/.manim_media/videos/smiles_reveal/1080p60/partial_movie_files/PsmilesRevealScene/736497086_72140533_1904406674.mp4'
+file 'file:C:/Users/SamueleMaggiori/master-thesis/create_slides/.manim_media/videos/smiles_reveal/1080p60/partial_movie_files/PsmilesRevealScene/736497086_576205175_1433848950.mp4'
+file 'file:C:/Users/SamueleMaggiori/master-thesis/create_slides/.manim_media/videos/smiles_reveal/1080p60/partial_movie_files/PsmilesRevealScene/736497086_3298466260_3105685263.mp4'
+file 'file:C:/Users/SamueleMaggiori/master-thesis/create_slides/.manim_media/videos/smiles_reveal/1080p60/partial_movie_files/PsmilesRevealScene/736497086_120530524_1530907721.mp4'
