@@ -3,6 +3,7 @@ from pptx.slide import Slide as PptxSlide
 from pptx.util import Emu
 
 from create_slides.DeckBuilding.AddSlideImagesMethod import add_slide_images
+from create_slides.DeckBuilding.AddSlideMoviesMethod import add_slide_movies
 from create_slides.DeckBuilding.ApplyUnisiBackgroundMethod import apply_unisi_background
 from create_slides.DeckBuilding.ApplyUnisiTextStyleMethod import apply_unisi_text_style
 from create_slides.Slide import Slide
@@ -38,7 +39,19 @@ def add_unisi_slide(
         body_w, body_h = background.body_size
         body_shape.left, body_shape.top = Emu(body_x), Emu(body_y)
         body_shape.height = Emu(body_h)
-        if slide.images:
+        if slide.movies:
+            # Bullets on top, click-to-play videos fill the rest of the body.
+            text_h = int(body_h * 0.30)
+            body_shape.width = Emu(body_w)
+            body_shape.height = Emu(text_h)
+            movies_y = body_y + int(body_h * 0.34)
+            add_slide_movies(
+                pptx_slide,
+                slide.movies,
+                (body_x, movies_y),
+                (body_w, body_h - int(body_h * 0.34)),
+            )
+        elif slide.images:
             # Two-column layout: bullets on the left, images fill the right.
             text_w = int(body_w * 0.52)
             body_shape.width = Emu(text_w)

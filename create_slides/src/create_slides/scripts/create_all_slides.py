@@ -1,12 +1,14 @@
 from pathlib import Path
 
 from create_slides.DeckBuilding import build_full_deck
+from create_slides.Movie import Movie
 from create_slides.Slide import Slide
 from create_slides.UnisiBackground import UNISI_CONTENT_SLIDE
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 OUTPUT_PATH = REPO_ROOT / "SLIDES" / "thesis_discussion_deck.pptx"
 PAPERS_DIR = REPO_ROOT / "create_slides" / "assets" / "papers"
+ANIMATIONS_DIR = REPO_ROOT / "create_slides" / "assets" / "animations"
 RESULTS_DIR = REPO_ROOT / "RESULTS"
 
 SLIDES = [
@@ -43,18 +45,30 @@ SLIDES = [
         visual_bullets=[
             "Modello Generativo → nuovi candidati polimerici",
             "Modello Predittivo → capacità di adsorbimento stimata",
-            "Filtro di dominio a collegarli → un'unica pipeline",
+        ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "polymer_carousel.mp4",
+                poster_path=ANIMATIONS_DIR / "polymer_carousel_poster.png",
+            ),
+            Movie(
+                video_path=ANIMATIONS_DIR / "prediction_pipeline.mp4",
+                poster_path=ANIMATIONS_DIR / "prediction_pipeline_poster.png",
+            ),
         ],
         speech=(
             "La tesi si basa su due sistemi complementari. Uno è generativo: propone nuovi "
             "candidati polimerici. L'altro è predittivo: dato un polimero e una molecola target, "
-            "stima quanto di quella molecola il polimero riesce ad adsorbire. A collegarli c'è un "
-            "filtro basato sulla conoscenza di dominio. Questi due sistemi formano una pipeline, "
+            "stima quanto di quella molecola il polimero riesce ad adsorbire. Questi due sistemi "
+            "formano una pipeline, "
             "in grado, dato in input una molecola che vogliamo \"catturare\" (ed iperparametri "
             "configurabili), di proporre in output una serie di polimeri che il modello predice "
             "essere dei buoni candidati."
         ),
-        todos=["Produrre il diagramma a due riquadri con freccia di confluenza."],
+        todos=[
+            "In presentazione: 1° click → carosello polimeri, 2° click → pipeline "
+            "predittiva, 3° click → slide successiva."
+        ],
     ),
     Slide(
         number=3,
