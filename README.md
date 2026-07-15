@@ -4,6 +4,11 @@
 
 This is a really simple an brief summary of each chapter in my thesis.
 
+**🎓 Discussion slides:** [Uomocosa/master-thesis-slides](https://github.com/Uomocosa/master-thesis-slides)
+— the presentation deck, viewable in the browser at
+<https://uomocosa.github.io/master-thesis-slides/>. It is generated from the
+[`create_slides`](create_slides/) package in this repo.
+
 ## Building the PDF
 
 The thesis compiles to a PDF/A-1b document with TeX Live. You don't need a
