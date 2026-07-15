@@ -16,6 +16,7 @@ dependencies = [
 create-slide-1 = "create_slides.scripts.create_slide_1:main"
 create-all-slides = "create_slides.scripts.create_all_slides:main"
 create-animation-assets = "create_slides.scripts.create_animation_assets:main"
+create-web-export = "create_slides.scripts.create_web_export:main"
 
 [build-system]
 requires = ["hatchling"]

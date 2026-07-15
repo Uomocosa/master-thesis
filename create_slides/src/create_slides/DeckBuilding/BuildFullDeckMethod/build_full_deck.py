@@ -22,6 +22,12 @@ def build_full_deck(
     for slide, background in slides:
         add_unisi_slide(prs, slide, background)
 
+    # Mark hidden slides: skipped in slideshow, still present/visible in edit view.
+    # `show` lives on the <p:sld> root of the slide part; PowerPoint ignores it on <p:sldId>.
+    for (slide, _), built in zip(slides, prs.slides):
+        if slide.hidden:
+            built._element.set("show", "0")
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     prs.save(output_path)
     logger.info(f"Saved {len(slides)} slides to {output_path}")

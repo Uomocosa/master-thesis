@@ -7,7 +7,6 @@ from pptx.util import Emu
 from create_slides.Movie import Movie
 
 GAP = Emu(228600)  # 0.25 in between movies
-ASPECT = 16 / 9
 
 CLICK_PAR_TEMPLATE = """\
 <p:par>
@@ -76,6 +75,12 @@ def movie_duration_ms(movie: Movie) -> int:
         return int(container.duration / 1000)
 
 
+def movie_aspect(movie: Movie) -> float:
+    with av.open(str(movie.video_path)) as container:
+        stream = container.streams.video[0]
+        return stream.width / stream.height
+
+
 def add_click_sequence_timing(
     pptx_slide: PptxSlide, movies: list[Movie], shape_ids: list[int]
 ) -> None:
@@ -117,21 +122,24 @@ def add_slide_movies(
     area_position: tuple[int, int],
     area_size: tuple[int, int],
 ) -> None:
-    """Lay 16:9 videos out in one row, centered, played by successive plain clicks."""
+    """Lay videos out in one row (each at its own aspect), centered, played by clicks."""
     if not movies:
         return
 
     area_x, area_y = area_position
     area_w, area_h = area_size
 
+    aspects = [movie_aspect(movie) for movie in movies]
     usable_w = area_w - GAP * (len(movies) - 1)
-    movie_w = min(usable_w // len(movies), int(area_h * ASPECT))
-    movie_h = int(movie_w / ASPECT)
-    row_w = movie_w * len(movies) + GAP * (len(movies) - 1)
+    # All movies share a row height; shrink it if the row would overflow the width.
+    width_at_full_height = sum(area_h * aspect for aspect in aspects)
+    movie_h = int(area_h * min(1.0, usable_w / width_at_full_height))
+    widths = [int(movie_h * aspect) for aspect in aspects]
+    row_w = sum(widths) + GAP * (len(movies) - 1)
     left = area_x + (area_w - row_w) // 2
     top = area_y + (area_h - movie_h) // 2
     shape_ids = []
-    for movie in movies:
+    for movie, movie_w in zip(movies, widths):
         movie_shape = pptx_slide.shapes.add_movie(
             str(movie.video_path),
             Emu(left),

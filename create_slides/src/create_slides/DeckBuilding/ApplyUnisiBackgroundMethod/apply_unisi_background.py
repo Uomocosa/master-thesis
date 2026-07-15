@@ -8,13 +8,19 @@ from create_slides.UnisiBackground import UnisiBackground
 
 def apply_unisi_background(pptx_slide: PptxSlide, background: UnisiBackground) -> None:
     if background.banner_image is not None:
-        pptx_slide.shapes.add_picture(
+        banner = pptx_slide.shapes.add_picture(
             str(background.banner_image),
             Emu(background.banner_position[0]),
             Emu(background.banner_position[1]),
             Emu(background.banner_size[0]),
             Emu(background.banner_size[1]),
         )
+        # z-order is spTree element order; the layout placeholders (title/body)
+        # already exist, so move the banner behind them (index 2 = first shape
+        # slot after nvGrpSpPr/grpSpPr).
+        sp_tree = pptx_slide.shapes._spTree
+        sp_tree.remove(banner._element)
+        sp_tree.insert(2, banner._element)
     pptx_slide.shapes.add_picture(
         str(background.logo_image),
         Emu(background.logo_position[0]),

@@ -8,8 +8,6 @@ from create_slides.UnisiBackground import (
     UNISI_CONTENT_SLIDE_SKYLINE,
 )
 
-SLIDE_BACKGROUNDS = {4: UNISI_CONTENT_SLIDE_SKYLINE}
-
 REPO_ROOT = Path(__file__).resolve().parents[4]
 OUTPUT_PATH = REPO_ROOT / "SLIDES" / "thesis_discussion_deck.pptx"
 PAPERS_DIR = REPO_ROOT / "create_slides" / "assets" / "papers"
@@ -103,6 +101,7 @@ SLIDES = [
     ),
     Slide(
         number=4,
+        skyline=True,
         title="Scarsità di Dati — Un Vincolo Strutturale",
         visual_bullets=[
             "\"Pochi studi pubblicati sulla capacità polimero-molecola\"",
@@ -157,6 +156,12 @@ SLIDES = [
             "SMILES / P-SMILES → proprietà fisico-chimiche rilevanti",
             "Da rappresentazione testuale a vettore di feature numeriche",
         ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "featurization_clock.mp4",
+                poster_path=ANIMATIONS_DIR / "featurization_clock_poster.png",
+            ),
+        ],
         speech=(
             "Per far lavorare i modelli su polimeri e molecole, serve prima trasformarli in "
             "numeri. Questa fase, che chiamo featurizzazione, prende una stringa SMILES o P-SMILES "
@@ -165,7 +170,6 @@ SLIDES = [
             "possono usare."
         ),
         todos=[
-            "Diagramma: SMILES → immagine molecola (rdkit) → vettore di feature.",
             "Verificare se polymetrix genera immagini della struttura polimerica da P-SMILES.",
         ],
     ),
@@ -173,12 +177,14 @@ SLIDES = [
         number=7,
         title="Gestire Dati Sparsi — Interpolazione",
         visual_bullets=[
-            "Pochi punti sperimentali, andamento regolare → interpolazione",
-            "Aggiunta del punto (0,0): a concentrazione zero, adsorbimento zero",
+            "Pochi punti sperimentali, ma andamento regolare → interpolazione",
+            "Poi il punto (0,0): concentrazione zero → adsorbimento zero",
         ],
-        images=[
-            PAPERS_DIR / "oxazoline_capacity_indomethacin_oestradiol_ibuprofen.png",
-            PAPERS_DIR / "cryogel_cmegl_kinetics_piroxicam.png",
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "interpolation_curves.mp4",
+                poster_path=ANIMATIONS_DIR / "interpolation_curves_poster.png",
+            ),
         ],
         speech=(
             "Quando i punti sperimentali erano pochi ma il loro andamento era abbastanza regolare "
@@ -198,6 +204,12 @@ SLIDES = [
             "Wrapper attorno a mingpt addestrato su token SMILES / P-SMILES",
             "Impara la \"grammatica\" chimica → strutture nuove e valide",
         ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "generative_transformer.mp4",
+                poster_path=ANIMATIONS_DIR / "generative_transformer_poster.png",
+            ),
+        ],
         speech=(
             "Per la parte generativa, ho addestrato un wrapper attorno a mingpt per generare "
             "stringhe SMILES valide per le molecole, e stringhe P-SMILES per i polimeri. Il "
@@ -205,10 +217,10 @@ SLIDES = [
             "da proporre strutture nuove, sintatticamente e chimicamente valide, invece di "
             "limitarsi a memorizzare gli esempi di training."
         ),
-        todos=["Diagramma: architettura mingpt, input token SMILES → output stringa generata."],
     ),
     Slide(
         number=9,
+        skyline=True,
         title="Modellazione Generativa — Risultati",
         visual_bullets=[
             "SMILES: 5525 / 12800 nuovi e validi",
@@ -232,6 +244,12 @@ SLIDES = [
             "Classificate per Q2 → selezione della configurazione migliore",
             "Modello finale: PSCP — \"PSmileCapacityPredictor\"",
         ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "model_carousel.mp4",
+                poster_path=ANIMATIONS_DIR / "model_carousel_poster.png",
+            ),
+        ],
         speech=(
             "Per la parte predittiva, ho eseguito una leave-one-out cross-validation su un gran "
             "numero di configurazioni di iperparametri, classificandole per punteggio Q2 — un "
@@ -241,7 +259,6 @@ SLIDES = [
             "prestazioni migliori come modello finale — lo chiamo PSCP, o "
             "\"PSmileCapacityPredictor\"."
         ),
-        todos=["Diagramma del ciclo LOOCV → classifica per Q2 → selezione."],
     ),
     Slide(
         number=11,
@@ -251,6 +268,12 @@ SLIDES = [
             "Output: capacità di adsorbimento predetta",
             "Un unico modello per tutte le condizioni sperimentali rilevanti",
         ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "pscp_io.mp4",
+                poster_path=ANIMATIONS_DIR / "pscp_io_poster.png",
+            ),
+        ],
         speech=(
             "Il modello PSCP trovato prende in input un polimero, una molecola target, la "
             "concentrazione e il pH, ne estrae le feature, scala gli input e restituisce in output "
@@ -258,10 +281,10 @@ SLIDES = [
             "riflettere tutte le condizioni sperimentali che possano influenzare realmente "
             "l'adsorbimento nella pratica."
         ),
-        todos=["Riquadro input/output grafico."],
     ),
     Slide(
         number=12,
+        hidden=True,
         title="Featurizzare i Polimeri — Un Contributo Metodologico",
         visual_bullets=[
             "rdkit non supporta i polimeri, solo le molecole",
@@ -287,6 +310,7 @@ SLIDES = [
             "Q2 = 0,984 — MAE = 1,50 — RMSE = 6,49",
             "Proof-of-concept validato sui dati oggi disponibili",
         ],
+        images=[ANIMATIONS_DIR / "pscp_schematic_poster.png"],
         speech=(
             "La configurazione migliore ha raggiunto un Q2 di 0,984, con un errore assoluto medio "
             "di circa 1,5 e un RMSE di circa 6,5. Questo risultato è da considerarsi un "
@@ -302,6 +326,7 @@ SLIDES = [
     ),
     Slide(
         number=14,
+        skyline=True,
         title="Filtraggio dei Polimeri — Criteri della Teoria FMO",
         visual_bullets=[
             "logP alto → il polimero resta solido e insolubile in acqua",
@@ -320,6 +345,7 @@ SLIDES = [
     ),
     Slide(
         number=15,
+        skyline=True,
         title="Un Filtro Modulare, e Volutamente Aggressivo",
         visual_bullets=[
             "10.000+ P-SMILES generati in poche ore",
@@ -338,6 +364,7 @@ SLIDES = [
     ),
     Slide(
         number=16,
+        hidden=True,
         title="Esplorazione Non Supervisionata — Clustering Gerarchico",
         visual_bullets=[
             "Clustering gerarchico agglomerativo sulle coppie polimero-molecola",
@@ -381,21 +408,45 @@ SLIDES = [
         number=18,
         title="Ampliare i Dati — Il Tool paper_scraper",
         visual_bullets=[
-            "OpenAlex (paper open access) → Grobid (estrazione testo) → LLM → PDCC",
-            "LLM testati: Gemma, DeepSeek, Kimi, Claude Opus",
+            "OpenAlex → recupero di paper ad accesso aperto",
+            "Grobid → estrazione del testo dai PDF",
+        ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "internet_papers.mp4",
+                poster_path=ANIMATIONS_DIR / "internet_papers_poster.png",
+            ),
         ],
         speech=(
             "Per attaccare il problema della scarsità di dati alla radice, ho costruito un "
-            "secondo strumento, che chiamo paper_scraper. Recupera paper ad accesso aperto "
-            "tramite OpenAlex, ne estrae altri tramite Grobid, e infine usa un LLM per estrarre "
-            "automaticamente le informazioni utili — polimero, molecola, concentrazione, "
-            "capacità, pH — direttamente dal testo dei paper. L'ho testato con diversi modelli: "
-            "Gemma, DeepSeek, Kimi e Claude Opus."
+            "secondo strumento, che chiamo paper_scraper. La prima fase raccoglie i paper: "
+            "recupera articoli ad accesso aperto tramite OpenAlex e ne estrae il testo dai PDF "
+            "tramite Grobid, così da avere una base di documenti da cui partire."
         ),
-        todos=["Diagramma di flusso OpenAlex → Grobid → LLM → PDCC con nomi dei modelli."],
     ),
     Slide(
         number=19,
+        title="Estrazione con LLM — Analisi dei Paper",
+        visual_bullets=[
+            "LLM estraggono Polimero / Molecola / Concentrazione / Capacità / pH dal testo",
+            "Analisi efficiente di molti paper in parallelo (Gemma, DeepSeek, Kimi, Claude Opus)",
+        ],
+        movies=[
+            Movie(
+                video_path=ANIMATIONS_DIR / "llm_magnifiers.mp4",
+                poster_path=ANIMATIONS_DIR / "llm_magnifiers_poster.png",
+            ),
+        ],
+        speech=(
+            "Una volta raccolti i paper, uso un LLM per estrarre automaticamente le informazioni "
+            "utili — polimero, molecola, concentrazione, capacità e pH — direttamente dal testo, "
+            "aggiungendole al dataset PDCC. Questo rende l'analisi di grandi quantità di paper "
+            "molto più efficiente. Ho testato diversi modelli: Gemma, DeepSeek, Kimi e Claude Opus."
+        ),
+    ),
+    Slide(
+        number=20,
+        skyline=True,
         title="Prospettive sulla Scarsità di Dati",
         visual_bullets=[
             "Oggi: pochi paper disponibili",
@@ -412,7 +463,8 @@ SLIDES = [
         todos=["Freccia temporale oggi → domani."],
     ),
     Slide(
-        number=20,
+        number=21,
+        skyline=True,
         title="Limiti — Dati & Validazione",
         visual_bullets=[
             "Dati: scarsità di misurazioni pubblicate, nessun risultato negativo",
@@ -428,7 +480,8 @@ SLIDES = [
         ),
     ),
     Slide(
-        number=21,
+        number=22,
+        skyline=True,
         title="Limiti — Ambito & Scelte di Modellazione",
         visual_bullets=[
             "Addestrato su PI1M (sintetico), non sul proprietario PolyInfo",
@@ -445,7 +498,8 @@ SLIDES = [
         ),
     ),
     Slide(
-        number=22,
+        number=23,
+        skyline=True,
         title="Sviluppi Futuri",
         visual_bullets=[
             "Più dati, in particolare risultati negativi (anche via paper_scraper)",
@@ -469,7 +523,10 @@ SLIDES = [
 def main() -> None:
     build_full_deck(
         [
-            (slide, SLIDE_BACKGROUNDS.get(slide.number, UNISI_CONTENT_SLIDE))
+            (
+                slide,
+                UNISI_CONTENT_SLIDE_SKYLINE if slide.skyline else UNISI_CONTENT_SLIDE,
+            )
             for slide in SLIDES
         ],
         OUTPUT_PATH,

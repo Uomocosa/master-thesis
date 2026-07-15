@@ -25,6 +25,14 @@ SCENES = [
     ("pdcc_carousel.py", "PDCCCarouselScene", "pdcc_carousel", 4.0),
     ("smiles_reveal.py", "SmilesRevealScene", "smiles_reveal", 1.5),
     ("smiles_reveal.py", "PsmilesRevealScene", "psmiles_reveal", 1.5),
+    ("featurization_clock.py", "FeaturizationClockScene", "featurization_clock", 10.5),
+    ("interpolation_curves.py", "InterpolationCurvesScene", "interpolation_curves", 7.5),
+    ("generative_transformer.py", "GenerativeTransformerScene", "generative_transformer", 6.6),
+    ("model_carousel.py", "ModelCarouselScene", "model_carousel", 8.2),
+    ("pscp_io.py", "PscpIoScene", "pscp_io", 5.0),
+    ("pscp_schematic.py", "PscpSchematicScene", "pscp_schematic", 2.4),
+    ("internet_papers.py", "InternetPapersScene", "internet_papers", 4.2),
+    ("llm_magnifiers.py", "LlmMagnifiersScene", "llm_magnifiers", 5.5),
 ]
 
 

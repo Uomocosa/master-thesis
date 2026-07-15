@@ -51,6 +51,18 @@ def add_unisi_slide(
                 (body_x, movies_y),
                 (body_w, body_h - int(body_h * 0.34)),
             )
+        elif slide.images and slide.images_below:
+            # Stacked layout: full-width bullets on top, images fill the rest.
+            text_h = int(body_h * 0.42)
+            body_shape.width = Emu(body_w)
+            body_shape.height = Emu(text_h)
+            images_y = body_y + int(body_h * 0.46)
+            add_slide_images(
+                pptx_slide,
+                slide.images,
+                (body_x, images_y),
+                (body_w, body_h - int(body_h * 0.46)),
+            )
         elif slide.images:
             # Two-column layout: bullets on the left, images fill the right.
             text_w = int(body_w * 0.52)
