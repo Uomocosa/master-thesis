@@ -3,8 +3,8 @@
 The pptx is the source of truth (it may have been hand-edited after generation).
 Each slide is rendered to a full PNG via PowerPoint COM (``render_pptx.ps1``) and used
 as a reveal.js slide background; embedded videos are extracted and overlaid as
-absolutely-positioned ``<video>`` elements at the exact rect of their pptx shape, so a
-click plays them in place — mirroring the PowerPoint slideshow behaviour.
+absolutely-positioned ``<video>`` elements at the exact rect of their pptx shape. Videos
+auto-play when their slide is shown; a second video on the same slide starts 5 s later.
 """
 
 import html
@@ -144,8 +144,8 @@ def render_pngs(
 
 def _slide_section(slide: WebSlide) -> str:
     overlays = "\n".join(
-        f'      <video class="fragment vid" data-fragment-index="{j}" muted playsinline '
-        f'preload="metadata" '
+        f'      <video class="vid" data-delay="{j * 5000}" muted playsinline '
+        f'preload="auto" '
         f'style="left:{v.left * 100:.4f}%;top:{v.top * 100:.4f}%;'
         f'width:{v.width * 100:.4f}%;height:{v.height * 100:.4f}%">'
         f'<source src="{html.escape(v.src)}" type="video/mp4"></video>'
@@ -189,25 +189,38 @@ def render_index_html(slides: list[WebSlide], title: str) -> str:
 {sections}
   </div>
 </div>
-<div class="hint">Clicca per avanzare &middot; sulle slide animate il click avvia l'animazione</div>
+<div class="hint">Clicca per avanzare &middot; le animazioni partono automaticamente</div>
 <script src="assets/reveal/reveal.js"></script>
 <script>
   Reveal.initialize({{
-    controls: true, progress: true, hash: true, fragments: true,
+    controls: true, progress: true, hash: true,
     center: false, width: 1920, height: 1080, margin: 0,
     keyboard: true, transition: 'fade',
   }});
 
-  function playFragmentVideo(frag) {{
-    if (!frag || !frag.classList.contains('vid')) return;
-    frag.classList.add('visible');
-    try {{ frag.currentTime = 0; frag.play(); }} catch (e) {{}}
+  // Videos auto-play when their slide is shown; each one waits its data-delay ms
+  // (0 for the first, 5000 for the second). Leaving the slide cancels pending
+  // timers so a not-yet-started video never plays over a different slide.
+  function stopVideos(slide) {{
+    if (!slide) return;
+    slide.querySelectorAll('.vid').forEach(v => {{
+      if (v._timer) {{ clearTimeout(v._timer); v._timer = null; }}
+      v.classList.remove('visible');
+      try {{ v.pause(); }} catch (e) {{}}
+    }});
   }}
-  Reveal.on('fragmentshown', e => playFragmentVideo(e.fragment));
-  Reveal.on('fragmenthidden', e => {{
-    const f = e.fragment;
-    if (f && f.classList.contains('vid')) {{ f.classList.remove('visible'); try {{ f.pause(); }} catch (e) {{}} }}
-  }});
+  function startVideos(slide) {{
+    if (!slide) return;
+    slide.querySelectorAll('.vid').forEach(v => {{
+      v._timer = setTimeout(() => {{
+        v._timer = null;
+        v.classList.add('visible');
+        try {{ v.currentTime = 0; v.play(); }} catch (e) {{}}
+      }}, +v.dataset.delay || 0);
+    }});
+  }}
+  Reveal.on('slidechanged', e => {{ stopVideos(e.previousSlide); startVideos(e.currentSlide); }});
+  Reveal.on('ready', e => startVideos(e.currentSlide));
 
   // Click anywhere advances the deck (reveal.js does not do this by default).
   // Guard clicks on the built-in controls / links so they aren't double-handled.
