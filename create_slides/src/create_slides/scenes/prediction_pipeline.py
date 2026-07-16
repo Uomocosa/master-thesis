@@ -5,7 +5,6 @@ from manim import (
     Circle,
     Create,
     FadeIn,
-    FadeOut,
     Line,
     RoundedRectangle,
     Scene,
@@ -121,6 +120,5 @@ class PredictionPipelineScene(Scene):
         )
         self.play(Create(output_arrow), run_time=0.4)
         self.play(FadeIn(output, scale=1.4), run_time=0.6)
+        # Hold the final frame: the video must end on the full pipeline, not fade to blank.
         self.wait(1.2)
-        self.play(FadeOut(VGroup(chips, network, arrows, output_arrow, output)), run_time=0.6)
-        self.wait(0.2)

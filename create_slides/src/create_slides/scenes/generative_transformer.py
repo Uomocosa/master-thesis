@@ -6,7 +6,6 @@ from manim import (
     RIGHT,
     UP,
     FadeIn,
-    FadeOut,
     Group,
     ImageMobject,
     RoundedRectangle,
@@ -103,9 +102,5 @@ class GenerativeTransformerScene(Scene):
                 run_time=0.55,
             )
 
+        # Hold the final frame: the video must end on model + candidates, not fade to blank.
         self.wait(1.2)
-        # Candidates disappear one at a time.
-        for item in candidates:
-            self.play(FadeOut(item), run_time=0.3)
-        self.play(FadeOut(model), run_time=0.4)
-        self.wait(0.2)

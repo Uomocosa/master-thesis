@@ -9,7 +9,6 @@ from manim import (
     Circle,
     Ellipse,
     FadeIn,
-    FadeOut,
     Line,
     RoundedRectangle,
     Scene,
@@ -82,7 +81,5 @@ class InternetPapersScene(Scene):
             papers.append(paper)
             self.play(FadeIn(paper, shift=target * 0.4), run_time=0.18)
 
+        # Hold the final frame: the video must end on the full paper cloud, not fade to blank.
         self.wait(1.2)
-        for paper in papers:
-            self.play(FadeOut(paper), run_time=0.12)
-        self.wait(0.3)

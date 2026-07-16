@@ -1,6 +1,7 @@
 """Entry point: build the reveal.js web presentation from the edited pptx.
 
-Renders the (professor-reviewed) `master-thesis-slides/Slide_Samuele_Maggiori_v2.pptx` into a
+Renders `master-thesis-slides/Slide_Samuele_Maggiori_v3.pptx` (professor-reviewed v2 with
+inverted video start/end: blank poster, final image held at the end) into a
 static, self-contained site under `master-thesis-slides/docs/`, ready for GitHub Pages.
 """
 
@@ -14,7 +15,7 @@ REVEAL_SRC = CREATE_SLIDES_DIR / "assets" / "reveal"
 
 # The slides repo sits next to master-thesis on disk.
 SLIDES_REPO = CREATE_SLIDES_DIR.parents[1] / "master-thesis-slides"
-PPTX_PATH = SLIDES_REPO / "Slide_Samuele_Maggiori_v2.pptx"
+PPTX_PATH = SLIDES_REPO / "Slide_Samuele_Maggiori_v3.pptx"
 OUT_DIR = SLIDES_REPO / "docs"
 
 

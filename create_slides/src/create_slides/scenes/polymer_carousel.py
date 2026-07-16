@@ -5,7 +5,6 @@ from manim import (
     UP,
     AnimationGroup,
     FadeIn,
-    FadeOut,
     ImageMobject,
     Scene,
     config,
@@ -40,5 +39,5 @@ class PolymerCarouselScene(Scene):
             self.remove(current)
             current = incoming
             self.wait(HOLD_SECONDS)
-        self.play(FadeOut(current), run_time=0.5)
-        self.wait(0.3)
+        # Hold the final frame: the video must end on the last polymer, not fade to blank.
+        self.wait(0.5)
