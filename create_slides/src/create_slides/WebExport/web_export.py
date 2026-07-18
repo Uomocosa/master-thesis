@@ -181,6 +181,14 @@ def render_index_html(slides: list[WebSlide], title: str) -> str:
     font-family:Calibri, Arial, sans-serif; font-size:14px; color:#888;
     z-index:40; pointer-events:none;
   }}
+  .fullscreen-btn {{
+    position:fixed; top:12px; right:12px; z-index:50;
+    width:40px; height:40px; border:none; border-radius:6px;
+    background:rgba(0,0,0,.35); color:#fff; font-size:22px; line-height:40px;
+    text-align:center; cursor:pointer; opacity:.55; transition:opacity .2s ease;
+    padding:0;
+  }}
+  .fullscreen-btn:hover {{ opacity:1; }}
 </style>
 </head>
 <body>
@@ -189,13 +197,24 @@ def render_index_html(slides: list[WebSlide], title: str) -> str:
 {sections}
   </div>
 </div>
-<div class="hint">Clicca per avanzare &middot; le animazioni partono automaticamente</div>
+<div class="hint">Clicca per avanzare &middot; le animazioni partono automaticamente &middot; F o &#x26F6; per lo schermo intero</div>
+<button class="fullscreen-btn" title="Schermo intero (F)" aria-label="Schermo intero">&#x26F6;</button>
 <script src="assets/reveal/reveal.js"></script>
 <script>
   Reveal.initialize({{
     controls: true, progress: true, hash: true,
     center: false, width: 1920, height: 1080, margin: 0,
-    keyboard: true, transition: 'fade',
+    keyboard: {{ 8: 'prev' }}, transition: 'fade',
+  }});
+
+  // Fullscreen toggle: the corner button and reveal's own F shortcut both work.
+  function toggleFullscreen() {{
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }}
+  document.querySelector('.fullscreen-btn').addEventListener('click', ev => {{
+    ev.stopPropagation();
+    toggleFullscreen();
   }});
 
   // Videos auto-play when their slide is shown; each one waits its data-delay ms
