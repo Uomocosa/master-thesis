@@ -105,38 +105,46 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font, max_w: int) -> list[st
 
 
 def build_back(number: int, title: str, speech: str, out_path: Path) -> None:
-    card = Image.new("RGB", (CARD_W, CARD_H), "white")
+    # Draw on a landscape canvas, then rotate so the back reads in the same held
+    # orientation as the (rotated) front slide.
+    canvas_w, canvas_h = CARD_H, CARD_W
+    card = Image.new("RGB", (canvas_w, canvas_h), "white")
     draw = ImageDraw.Draw(card)
     # Thin double outline, kept close to the edge so it stays discreet.
-    draw.rounded_rectangle([14, 14, CARD_W - 15, CARD_H - 15], radius=24,
+    draw.rounded_rectangle([14, 14, canvas_w - 15, canvas_h - 15], radius=24,
                            outline=UNISI_RED, width=3)
-    draw.rounded_rectangle([24, 24, CARD_W - 25, CARD_H - 25], radius=18,
+    draw.rounded_rectangle([24, 24, canvas_w - 25, canvas_h - 25], radius=18,
                            outline=UNISI_RED, width=1)
 
     pad = 46
-    max_w = CARD_W - 2 * pad
+    max_w = canvas_w - 2 * pad
     title_font = ImageFont.truetype(str(FONTS / "calibrib.ttf"), 34)
     title_lines = wrap_text(draw, f"{number}. {title}", title_font, max_w)
-    y = pad
-    for line in title_lines:
-        draw.text((CARD_W / 2, y), line, font=title_font, fill=UNISI_RED, anchor="ma")
-        y += 40
-    y += 8
-    draw.line([pad, y, CARD_W - pad, y], fill=UNISI_RED, width=2)
-    y += 16
+    title_h = 40 * len(title_lines) + 8
+    divider_gap = 16
 
-    # Auto-shrink the speech font until everything fits above the bottom border.
+    # Auto-shrink the speech font until the whole block fits between the borders.
     for size in range(30, 13, -1):
         body_font = ImageFont.truetype(str(FONTS / "calibri.ttf"), size)
         line_h = round(size * 1.22)
         lines = wrap_text(draw, speech, body_font, max_w)
-        if y + line_h * len(lines) <= CARD_H - pad:
+        total_h = title_h + divider_gap + line_h * len(lines)
+        if total_h <= canvas_h - 2 * pad:
             break
-    ty = y
+
+    # Vertically center the whole block (title + divider + speech).
+    y = max(pad, (canvas_h - total_h) // 2)
+    for line in title_lines:
+        draw.text((canvas_w / 2, y), line, font=title_font, fill=UNISI_RED, anchor="ma")
+        y += 40
+    y += 8
+    draw.line([pad, y, canvas_w - pad, y], fill=UNISI_RED, width=2)
+    y += divider_gap
     for line in lines:
-        draw.text((pad, ty), line, font=body_font, fill=(20, 20, 20))
-        ty += line_h
-    card.save(out_path, dpi=(DPI, DPI))
+        draw.text((pad, y), line, font=body_font, fill=(20, 20, 20))
+        y += line_h
+
+    card.rotate(270, expand=True).save(out_path, dpi=(DPI, DPI))
 
 
 def build_sheets(cards: list[Path], stem: str) -> None:
