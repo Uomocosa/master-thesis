@@ -1,6 +1,6 @@
 # Discussion — Speach Slide per Slide
 
-_Una sezione per ogni slide visibile di `Slide_Samuele_Maggiori_v3.pptx`; sotto ogni titolo, il discorso da tenere._
+_Una sezione per ogni slide visibile di `Slide_Samuele_Maggiori_v4.pptx`; sotto ogni titolo, il discorso da tenere._
 
 ---
 
@@ -56,38 +56,46 @@ Il modello PSCP trovato prende in input un polimero, una molecola target, la con
 
 La configurazione migliore ha raggiunto un Q2 di 0,984, con un errore assoluto medio di circa 1,5 e un RMSE di circa 6,5. Questo risultato è da considerarsi un "proof-of-concept" — dimostra che l'approccio può funzionare, ed è validato sui dati attualmente disponibili — ma il vero banco di prova della generalizzazione arriverà con altre misurazioni pubblicate. Ed è esattamente qui che il punto sulla scarsità di dati, sollevato qualche slide fa, torna a farsi sentire.
 
-### 15. Filtraggio dei Polimeri — Criteri della Teoria FMO
+### 15. Modellazione Predittiva — Parity Plot
+
+Questo è il parity plot della configurazione migliore: ogni punto confronta la capacità reale misurata con quella predetta dal modello in leave-one-out. Più i punti giacciono sulla diagonale tratteggiata — la predizione perfetta — migliore è il modello, e come vedete i punti la seguono da vicino su tutto l'intervallo, dalle capacità più basse fino ai casi oltre 600. È la fotografia visiva del Q2 di 0,984 che ho appena mostrato.
+
+### 16. Filtraggio dei Polimeri — Criteri della Teoria FMO
 
 Una volta ottenuti i polimeri candidati, li filtro usando la teoria degli orbitali molecolari di frontiera. Seleziono un logP alto in modo che il polimero rimanga solido e insolubile in acqua, un TPSA più alto per i siti di legame polari, un gap FMO intermolecolare più basso per un legame donatore-accettore più forte, e un SA score più basso così da essere realisticamente sintetizzabile su scala.
 
-### 16. Un Filtro Modulare, Volutamente Aggressivo
+### 17. Un Filtro Modulare, Volutamente Aggressivo
 
 Come il resto della pipeline, anche questo filtro è modulare: si può sostituire o affinare senza toccare il resto del sistema. Il filtro attuale è piuttosto severo e scarta molti dei polimeri generati — ma essendo in grado di generare diecimila nuovi P-SMILES nell'arco di poche ore, posso permettermi un filtro così "aggressivo": anche scartando la maggior parte dei candidati, restano comunque abbastanza polimeri promettenti da valutare.
 
-### 18. La Pipeline Integrata Completa
+### 19. La Pipeline Integrata Completa
 
 Tutto questo confluisce in un'unica funzione che chiamo `find_polymer_for_target_molecule`. Le si dà una molecola target, lei la converte in SMILES, genera polimeri candidati, li filtra, ne predice la capacità e ripete il ciclo — proponendo altri candidati — finché non raggiunge la capacità target. La maggior parte dei componenti della pipeline è inoltre modulare: possiamo teoricamente accomodare futuri sviluppi, miglioramenti, diversi filtri e modelli di generazione e predizione.
 
-### 19. Ampliare i Dati — Il Tool paper_scraper
+### 20. Ampliare i Dati — Il Tool paper_scraper
 
 Per attaccare il problema della scarsità di dati alla radice, ho costruito un secondo strumento, che chiamo paper_scraper. Recupera paper ad accesso aperto tramite OpenAlex, ne estrae altri tramite Grobid, e infine usa un LLM per estrarre automaticamente le informazioni utili — polimero, molecola, concentrazione, capacità, pH — direttamente dal testo dei paper.
 
-### 20. Estrazione con LLM — Analisi dei Paper
+### 21. Estrazione con LLM — Analisi dei Paper
 
 Il cuore dello strumento è proprio l'estrazione con LLM: il modello legge il testo del paper e ne ricava, in forma strutturata, le righe da aggiungere al dataset PDCC. Ho testato questo passaggio con diversi modelli — Gemma, DeepSeek, Kimi e Claude Opus — per confrontarne l'affidabilità nell'estrarre correttamente polimero, molecola, concentrazione, capacità e pH.
 
-### 21. Prospettive sulla Scarsità di Dati
+### 22. Estrazione con LLM — Risultati
+
+Questa tabella riassume il contributo di ciascun modello al dataset finale, dopo la risoluzione chimica e la deduplicazione. DeepSeek, sull'intero corpus di circa 2.200 paper, è di gran lunga il contributore principale con 239 righe; Claude Opus, usato per una revisione manuale di soli 8 paper problematici, ne aggiunge 49; Kimi e Gemma contribuiscono marginalmente. È interessante il confronto diretto: sugli stessi paper, Gemma in modalità testo non ha prodotto nessuna riga utile, mentre in modalità immagini qualcosa ha recuperato — segno che la capacità del modello e la modalità di input contano almeno quanto il prompt. In totale, circa 300 righe uniche si aggiungono al dataset PDCC originale.
+
+### 23. Prospettive sulla Scarsità di Dati
 
 Ad oggi mancano ancora paper sufficienti, e questo resta un vincolo reale. Ma guardando avanti, mi aspetto che nel tempo emergano nuovi paper da cui estrarre dati, e che i modelli LLM diventino sempre più capaci ed efficienti: questo strumento è pensato proprio per sfruttare quella crescita ed espandere il dataset PDCC in modo via via più automatico.
 
-### 22. Limiti — Dati & Validazione
+### 24. Limiti — Dati & Validazione
 
 Voglio essere diretto sui limiti. Primo, i dati: ci sono troppe poche misurazioni di capacità pubblicate per addestrare o validare in modo robusto il modello predittivo, e in particolare mancano dati di risultato negativo — polimeri che non adsorbono — che affinerebbero sia il filtro sia il modello. Secondo, la validazione: nulla di generato da questa pipeline è stato testato in laboratorio. Ogni risultato che ho mostrato è puramente computazionale.
 
-### 23. Limiti — Ambito & Scelte di Modellazione
+### 25. Limiti — Ambito & Scelte di Modellazione
 
 Ci sono anche alcuni limiti di ambito. Il modello generativo è stato addestrato sul dataset sintetico PI1M, non sul dataset proprietario PolyInfo da cui PI1M deriva, poiché non avevo accesso a quest'ultimo. Convertire i nomi grezzi dei materiali in SMILES è semplice grazie a PubChem, ma la conversione in P-SMILES è ancora manuale e limitata. E l'intera pipeline considera solo materiali a polimero singolo — nessun composito a doppio polimero o multi-materiale, per ora.
 
-### 24. Sviluppi Futuri
+### 26. Sviluppi Futuri
 
 Guardando avanti, il prossimo passo a maggior valore è semplicemente più dati — in particolare risultati negativi — che migliorerebbero in modo significativo sia il filtro sia il modello predittivo. Oltre a questo, vorrei esplorare notazioni polimeriche alternative come BigSmiles se i dati lo permettono, provare architetture più complesse come le graph neural network una volta disponibili abbastanza dati da giustificarle, cercare l'accesso al dataset proprietario PolyInfo, ed estendere la pipeline a input multi-materiale e a doppio polimero.

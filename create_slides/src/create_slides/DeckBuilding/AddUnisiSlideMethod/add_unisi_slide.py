@@ -4,6 +4,7 @@ from pptx.util import Emu
 
 from create_slides.DeckBuilding.AddSlideImagesMethod import add_slide_images
 from create_slides.DeckBuilding.AddSlideMoviesMethod import add_slide_movies
+from create_slides.DeckBuilding.AddSlideTableMethod import add_slide_table
 from create_slides.DeckBuilding.ApplyUnisiBackgroundMethod import apply_unisi_background
 from create_slides.DeckBuilding.ApplyUnisiTextStyleMethod import apply_unisi_text_style
 from create_slides.Slide import Slide
@@ -62,6 +63,18 @@ def add_unisi_slide(
                 slide.images,
                 (body_x, images_y),
                 (body_w, body_h - int(body_h * 0.46)),
+            )
+        elif slide.table:
+            # Stacked layout: full-width bullets on top, table fills the rest.
+            text_h = int(body_h * 0.20)
+            body_shape.width = Emu(body_w)
+            body_shape.height = Emu(text_h)
+            table_y = body_y + int(body_h * 0.24)
+            add_slide_table(
+                pptx_slide,
+                slide.table,
+                (body_x, table_y),
+                (body_w, body_h - int(body_h * 0.24)),
             )
         elif slide.images:
             # Two-column layout: bullets on the left, images fill the right.
